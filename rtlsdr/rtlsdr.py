@@ -33,6 +33,16 @@ try:
 except ImportError:
     has_numpy = False
 
+class RtlSdrError(IOError):
+    def __init__(self, msg, error_code=None):
+        self.msg = msg
+        self.error_code = error_code
+    def __str__(self):
+        msg = self.msg
+        if self.error_code is not None:
+            msg = 'Error Code {}: {}'.format(self.error_code, msg)
+        return msg
+
 
 class RtlSdr(object):
     # some default values for various parameters
@@ -54,6 +64,19 @@ class RtlSdr(object):
     def __init__(self, device_index=0, test_mode_enabled=False):
         self.open(device_index, test_mode_enabled)
 
+    def _call_librtlsdr(self, fn, *args, **kwargs):
+        test_result = kwargs.get('test_result', True)
+        result = fn(self.dev_p, *args)
+
+        if test_result and result < 0:
+            self.close()
+            msg = fn.__name__
+            if msg.startswith('rtlsdr_'):
+                msg = msg.lstrip('rtlsdr_')
+            raise RtlSdrError(msg, result)
+
+        return result
+
     def open(self, device_index=0, test_mode_enabled=False):
         ''' Initialize RtlSdr object.
         The test_mode_enabled parameter can be used to enable a special test mode, which will return the value of an
@@ -65,22 +88,13 @@ class RtlSdr(object):
         self.dev_p = p_rtlsdr_dev(None)
 
         # initialize device
-        result = librtlsdr.rtlsdr_open(self.dev_p, device_index)
-        if result < 0:
-            raise IOError('Error code %d when opening SDR (device index = %d)'\
-                          % (result, device_index))
+        self._call_librtlsdr(librtlsdr.rtlsdr_open, device_index)
 
         # enable test mode if necessary
-        result = librtlsdr.rtlsdr_set_testmode(self.dev_p, int(test_mode_enabled))
-        if result < 0:
-            raise IOError('Error code %d when setting test mode'\
-                          % (result))
+        self._call_librtlsdr(librtlsdr.rtlsdr_set_testmode, int(test_mode_enabled))
 
         # reset buffers
-        result = librtlsdr.rtlsdr_reset_buffer(self.dev_p)
-        if result < 0:
-            raise IOError('Error code %d when resetting buffer (device index = %d)'\
-                          % (result, device_index))
+        self._call_librtlsdr(librtlsdr.rtlsdr_reset_buffer)
 
         self.device_opened = True
         self.init_device_values()
@@ -110,22 +124,13 @@ class RtlSdr(object):
 
         freq = int(freq)
 
-        result = librtlsdr.rtlsdr_set_center_freq(self.dev_p, freq)
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when setting center freq. to %d Hz'\
-                          % (result, freq))
+        self._call_librtlsdr(librtlsdr.rtlsdr_set_center_freq, freq)
 
-        return
 
     def get_center_freq(self):
         ''' Return center frequency of tuner (in Hz). '''
 
-        result = librtlsdr.rtlsdr_get_center_freq(self.dev_p)
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when getting center freq.'\
-                          % (result))
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_get_center_freq)
 
         # FIXME: the E4000 rounds to kHz, this may not be true for other tuners
         reported_center_freq = result
@@ -138,22 +143,12 @@ class RtlSdr(object):
 
         freq = int(err_ppm)
 
-        result = librtlsdr.rtlsdr_set_freq_correction(self.dev_p, err_ppm)
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when setting freq. offset to %d ppm'\
-                          % (result, err_ppm))
-
-        return
+        self._call_librtlsdr(librtlsdr.rtlsdr_set_freq_correction, err_ppm)
 
     def get_freq_correction(self):
         ''' Get frequency offset of tuner (in PPM). '''
 
-        result = librtlsdr.rtlsdr_get_freq_correction(self.dev_p)
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when getting freq. offset in ppm.'\
-                          % (result))
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_get_freq_correction)
         return result
 
     def set_sample_rate(self, rate):
@@ -162,22 +157,12 @@ class RtlSdr(object):
 
         rate = int(rate)
 
-        result = librtlsdr.rtlsdr_set_sample_rate(self.dev_p, rate)
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when setting sample rate to %d Hz'\
-                          % (result, rate))
-
-        return
+        self._call_librtlsdr(librtlsdr.rtlsdr_set_sample_rate, rate)
 
     def get_sample_rate(self):
         ''' Get sample rate of tuner (in Hz) '''
 
-        result = librtlsdr.rtlsdr_get_sample_rate(self.dev_p)
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when getting sample rate'\
-                          % (result))
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_get_sample_rate)
 
         # figure out actual sample rate, taken directly from librtlsdr
         reported_sample_rate = result
@@ -206,22 +191,17 @@ class RtlSdr(object):
         # disable AGC
         self.set_manual_gain_enabled(True)
 
-        result = librtlsdr.rtlsdr_set_tuner_gain(self.dev_p,
-                                                 self.gain_values[nearest_gain_ind])
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when setting gain to %d'\
-                          % (result, gain))
-
-        return
+        self._call_librtlsdr(librtlsdr.rtlsdr_set_tuner_gain,
+                             self.gain_values[nearest_gain_ind])
 
     def get_gain(self):
         ''' Get gain of tuner (in dB). '''
 
-        result = librtlsdr.rtlsdr_get_tuner_gain(self.dev_p)
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_get_tuner_gain,
+                                      test_result=False)
         if 0 and result == 0:
             self.close()
-            raise IOError('Error when getting gain')
+            raise RtlSdrError('Error when getting gain', result)
 
         return result/10
 
@@ -230,10 +210,7 @@ class RtlSdr(object):
         All gains are in tenths of a dB
         '''
         buffer = (c_int *50)()
-        result = librtlsdr.rtlsdr_get_tuner_gains(self.dev_p, buffer)
-        if result == 0:
-            self.close()
-            raise IOError('Error when getting gains')
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_get_tuner_gains, buffer)
 
         gains = []
         for i in range(result):
@@ -246,20 +223,12 @@ class RtlSdr(object):
         If enabled is False, then AGC is used. Use set_gain() instead of calling
         this directly.
         '''
-        result = librtlsdr.rtlsdr_set_tuner_gain_mode(self.dev_p, int(enabled))
-        if result < 0:
-            raise IOError('Error code %d when setting gain mode'\
-                          % (result))
-
-        return
+        self._call_librtlsdr(librtlsdr.rtlsdr_set_tuner_gain_mode, int(enabled))
 
     def set_agc_mode(self, enabled):
         ''' Enable RTL2832 AGC
         '''
-        result = librtlsdr.rtlsdr_set_agc_mode(self.dev_p, int(enabled))
-        if result < 0:
-            raise IOError('Error code %d when setting AGC mode'\
-                          % (result))
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_set_agc_mode, int(enabled))
 
         return result
 
@@ -284,20 +253,15 @@ class RtlSdr(object):
         if not direct:
             direct = 0
 
-        result = librtlsdr.rtlsdr_set_direct_sampling(self.dev_p, direct)
-        if result < 0:
-            raise IOError('Error code %d when setting AGC mode'\
-                          % (result))
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_set_direct_sampling,
+                                      direct)
 
         return result
 
     def get_tuner_type(self):
         ''' Get the tuner type.
         '''
-        result = librtlsdr.rtlsdr_get_tuner_type(self.dev_p)
-        if result < 0:
-            raise IOError('Error code %d when getting tuner type'\
-                          % (result))
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_get_tuner_type)
 
         return result
 
@@ -315,17 +279,13 @@ class RtlSdr(object):
             array_type = (c_ubyte*num_bytes)
             self.buffer = array_type()
 
-        result = librtlsdr.rtlsdr_read_sync(self.dev_p, self.buffer, num_bytes,\
-                                            byref(self.num_bytes_read))
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when reading %d bytes'\
-                          % (result, num_bytes))
+        self._call_librtlsdr(librtlsdr.rtlsdr_read_sync, self.buffer, num_bytes,
+                             byref(self.num_bytes_read))
 
         if self.num_bytes_read.value != num_bytes:
             self.close()
-            raise IOError('Short read, requested %d bytes, received %d'\
-                          % (num_bytes, self.num_bytes_read.value))
+            raise RtlSdrError('Short read, requested %d bytes, received %d'
+                              % (num_bytes, self.num_bytes_read.value))
 
         return self.buffer
 
@@ -379,12 +339,8 @@ class RtlSdr(object):
             context = self
 
         self.read_async_canceling = False
-        result = librtlsdr.rtlsdr_read_async(self.dev_p, rtlsdr_callback,\
-                    context, self.DEFAULT_ASYNC_BUF_NUMBER, num_bytes)
-        if result < 0:
-            self.close()
-            raise IOError('Error code %d when requesting %d bytes'\
-                          % (result, num_bytes))
+        self._call_librtlsdr(librtlsdr.rtlsdr_read_async, rtlsdr_callback,
+                             context, self.DEFAULT_ASYNC_BUF_NUMBER, num_bytes)
 
         self.read_async_canceling = False
 
@@ -422,13 +378,13 @@ class RtlSdr(object):
         and limit_calls() in helpers.py.
         '''
 
-        result = librtlsdr.rtlsdr_cancel_async(self.dev_p)
+        result = self._call_librtlsdr(librtlsdr.rtlsdr_cancel_async,
+                                      test_result=False)
         # sometimes we get additional callbacks after canceling an async read,
         # in this case we don't raise exceptions
         if result < 0 and not self.read_async_canceling:
             self.close()
-            raise IOError('Error code %d when canceling async read'\
-                          % (result))
+            raise RtlSdrError('async_read', result)
 
         self.read_async_canceling = True
 
