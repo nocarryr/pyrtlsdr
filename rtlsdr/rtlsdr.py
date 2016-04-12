@@ -34,12 +34,13 @@ except ImportError:
     has_numpy = False
 
 
-class BaseRtlSdr(object):
+class RtlSdr(object):
     # some default values for various parameters
     DEFAULT_GAIN = 'auto'
     DEFAULT_FC = 80e6
     DEFAULT_RS = 1.024e6
     DEFAULT_READ_SIZE = 1024
+    DEFAULT_ASYNC_BUF_NUMBER = 0 # librtlsdr will use the default (15)
 
     CRYSTAL_FREQ = 28800000
 
@@ -48,6 +49,7 @@ class BaseRtlSdr(object):
     buffer = []
     num_bytes_read = c_int32(0)
     device_opened = False
+    read_async_canceling = False
 
     def __init__(self, device_index=0, test_mode_enabled=False):
         self.open(device_index, test_mode_enabled)
@@ -355,19 +357,6 @@ class BaseRtlSdr(object):
 
         return iq
 
-    center_freq = fc = property(get_center_freq, set_center_freq)
-    sample_rate = rs = property(get_sample_rate, set_sample_rate)
-    gain = property(get_gain, set_gain)
-    freq_correction = property(get_freq_correction, set_freq_correction)
-
-
-# This adds async read support to base class BaseRtlSdr (don't use that one)
-class RtlSdr(BaseRtlSdr):
-    DEFAULT_ASYNC_BUF_NUMBER = 0 # librtlsdr will use the default (15)
-    DEFAULT_READ_SIZE = 1024
-
-    read_async_canceling = False
-
     def read_bytes_async(self, callback, num_bytes=DEFAULT_READ_SIZE, context=None):
         ''' Continuously read "num_bytes" bytes from tuner and call Python function
         "callback" with the result. "context" is any Python object that will be
@@ -442,3 +431,8 @@ class RtlSdr(BaseRtlSdr):
                           % (result))
 
         self.read_async_canceling = True
+
+    center_freq = fc = property(get_center_freq, set_center_freq)
+    sample_rate = rs = property(get_sample_rate, set_sample_rate)
+    gain = property(get_gain, set_gain)
+    freq_correction = property(get_freq_correction, set_freq_correction)
