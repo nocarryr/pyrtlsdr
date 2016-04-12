@@ -12,7 +12,7 @@ if not ASYNC_AVAILABLE:
     collect_ignore.append('test_aio.py')
 
 def is_travisci():
-    return all([os.environ.get(key) == 'true' for key in ['CI', 'TRAVIS']])
+    return True#all([os.environ.get(key) == 'true' for key in ['CI', 'TRAVIS']])
 
 @pytest.fixture(autouse=True)
 def librtlsdr_override(monkeypatch):
@@ -21,7 +21,10 @@ def librtlsdr_override(monkeypatch):
     import testlibrtlsdr
     for attr in ['p_rtlsdr_dev', 'librtlsdr', 'rtlsdr_read_async_cb_t']:
         lib_attr = '.'.join(['rtlsdr', 'rtlsdr', attr])
-        override = getattr(testlibrtlsdr, attr)
+        if attr == 'librtlsdr':
+            override = testlibrtlsdr.LibRtlSdr()
+        else:
+            override = getattr(testlibrtlsdr, attr)
         monkeypatch.setattr(lib_attr, override)
 
 @pytest.fixture(params=[True, False])

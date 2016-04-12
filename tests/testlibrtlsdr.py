@@ -10,6 +10,8 @@ class p_rtlsdr_dev(object):
 class LibRtlSdr(object):
     async_callback = None
     async_generator = None
+    RETURN_VALUE = 0
+
     def __init__(self):
         self.fc = 1e6
         self.rs = 2e6
@@ -20,29 +22,35 @@ class LibRtlSdr(object):
         self.agc_mode = 0
         self.direct_sampling = 0
     def rtlsdr_open(self, *args):
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_set_testmode(self, *args):
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_reset_buffer(self, *args):
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_close(self, *args):
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_set_center_freq(self, dev_p, fc):
         self.fc = fc
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_get_center_freq(self, *args):
-        return self.fc
+        if self.RETURN_VALUE == 0:
+            return self.fc
+        else:
+            return self.RETURN_VALUE
     def rtlsdr_set_freq_correction(self, dev_p, err_ppm):
         self.err_ppm = err_ppm
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_set_sample_rate(self, dev_p, rs):
         self.rs = rs
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_get_sample_rate(self, *args):
-        return self.rs
+        if self.RETURN_VALUE == 0:
+            return self.rs
+        else:
+            return self.RETURN_VALUE
     def rtlsdr_set_tuner_gain(self, dev_p, gain):
         self.gain = gain
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_get_tuner_gain(self, *args):
         return self.gain
     def rtlsdr_get_tuner_gains(self, dev_p, buf):
@@ -51,19 +59,23 @@ class LibRtlSdr(object):
         return len(self.gains)
     def rtlsdr_set_tuner_gain_mode(self, dev_p, mode):
         self.gain_mode = mode
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_set_agc_mode(self, dev_p, mode):
         self.agc_mode = mode
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_set_direct_sampling(self, dev_p, direct):
         self.direct_sampling = direct
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_get_tuner_type(self, *args):
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_read_sync(self, dev_p, buf, num_bytes, num_bytes_read):
-        num_bytes_read._obj.value = num_bytes
+        if False:#self.RETURN_VALUE != 0:
+            # Make the length check raise an exception
+            num_bytes_read._obj.value = num_bytes + 2
+        else:
+            num_bytes_read._obj.value = num_bytes
         self._generate_fake_data(num_bytes, buf)
-        return 0
+        return self.RETURN_VALUE
     def _generate_fake_data(self, data_len, buf=None):
         if buf is None:
             array_type = (c_ubyte*data_len)
@@ -90,11 +102,11 @@ class LibRtlSdr(object):
         self.async_generator = AsyncGenerator(self, num_bytes)
         self.async_generator.run()
         self.async_generator = None
-        return 0
+        return self.RETURN_VALUE
     def rtlsdr_cancel_async(self, *args):
         if self.async_generator is not None:
             self.async_generator.running = False
-        return 0
+        return self.RETURN_VALUE
 
 class AsyncGenerator(object):
     """Simple object to emulate `rtlsdr_read_async` behavior.
@@ -118,7 +130,6 @@ class AsyncGenerator(object):
             libobj.async_callback(buf, self.num_bytes, libobj.async_context)
             time.sleep(self.timeout)
 
-librtlsdr = LibRtlSdr()
 
 def rtlsdr_read_async_cb_t(cb):
     return cb
