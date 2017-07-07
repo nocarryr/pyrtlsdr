@@ -14,8 +14,11 @@ def test_client_mode(client_mode):
     with pytest.warns(None) as record:
         import rtlsdr
     if len(record) > 1:
-        assert len(record) == 2
-        w_classes = [w.message.__class__ for w in record]
+        if len(record) > 2:
+            for w in record:
+                print(str(w))
+        w_classes = set([w.message.__class__ for w in record])
+        assert len(w_classes) == 2
         assert ImportWarning in w_classes
         assert rtlsdr.ClientModeWarning in w_classes
     else:
