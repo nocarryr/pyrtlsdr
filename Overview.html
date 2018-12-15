@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview &mdash; pyrtlsdr 0.2.91 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Reference" href="Reference.html" />
+    <link rel="prev" title="Welcome to pyrtlsdr’s documentation!" href="index.html" />
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-26848999-11');
+</script>
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyrtlsdr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.91
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyrtlsdr">pyrtlsdr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#links">Links</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#simple-way-to-read-and-print-some-samples">Simple way to read and print some samples:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plotting-the-psd-with-matplotlib">Plotting the PSD with matplotlib:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resulting-plot">Resulting Plot:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#handling-multiple-devices">Handling multiple devices:</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#note">Note</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#experimental-features">Experimental features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rtlsdraio">rtlsdraio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rtlsdrtcp">rtlsdrtcp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tcp-client-mode">TCP Client Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#todo">Todo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#credit">Credit</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Reference.html">Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyrtlsdr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pyrtlsdr">
+<h2>pyrtlsdr<a class="headerlink" href="#pyrtlsdr" title="Permalink to this headline">¶</a></h2>
+<p>A Python wrapper for librtlsdr (a driver for Realtek RTL2832U based SDR’s)</p>
+<a class="reference external image-reference" href="https://travis-ci.org/roger-/pyrtlsdr"><img alt="Build Status" src="https://travis-ci.org/roger-/pyrtlsdr.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://coveralls.io/github/roger-/pyrtlsdr?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/roger-/pyrtlsdr/badge.svg?branch=master" /></a>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>pyrtlsdr is a simple Python interface to devices supported by the RTL-SDR project, which turns certain USB DVB-T dongles
+employing the Realtek RTL2832U chipset into low-cost, general purpose software-defined radio receivers. It wraps many of the
+functions in the <a class="reference external" href="https://github.com/librtlsdr/librtlsdr">librtlsdr library</a> including asynchronous read support
+and also provides a more Pythonic API.</p>
+</div>
+<div class="section" id="links">
+<h2>Links<a class="headerlink" href="#links" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Documentation:<ul>
+<li><a class="reference external" href="https://nocarryr.github.io/pyrtlsdr/">https://nocarryr.github.io/pyrtlsdr/</a></li>
+</ul>
+</li>
+<li>Releases:<ul>
+<li><a class="reference external" href="https://pypi.org/project/pyrtlsdr/">https://pypi.org/project/pyrtlsdr/</a></li>
+</ul>
+</li>
+<li>Source code and project home:<ul>
+<li><a class="reference external" href="https://github.com/roger-/pyrtlsdr">https://github.com/roger-/pyrtlsdr</a></li>
+</ul>
+</li>
+<li>Releases for <code class="docutils literal notranslate"><span class="pre">librtlsdr</span></code>:<ul>
+<li><a class="reference external" href="https://github.com/librtlsdr/librtlsdr/releases">https://github.com/librtlsdr/librtlsdr/releases</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>pyrtlsdr can be installed by downloading the source files and running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code>, or using <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a> and
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pyrtlsdr</span></code>.</p>
+<p>All functions in librtlsdr are accessible via librtlsdr.py and a Pythonic interface is available in rtlsdr.py (recommended).
+Some documentation can be found in docstrings in the latter file.</p>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="simple-way-to-read-and-print-some-samples">
+<h4>Simple way to read and print some samples:<a class="headerlink" href="#simple-way-to-read-and-print-some-samples" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rtlsdr</span> <span class="kn">import</span> <span class="n">RtlSdr</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="p">()</span>
+
+<span class="c1"># configure device</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">2.048e6</span>  <span class="c1"># Hz</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">center_freq</span> <span class="o">=</span> <span class="mf">70e6</span>     <span class="c1"># Hz</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">freq_correction</span> <span class="o">=</span> <span class="mi">60</span>   <span class="c1"># PPM</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">gain</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">sdr</span><span class="o">.</span><span class="n">read_samples</span><span class="p">(</span><span class="mi">512</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plotting-the-psd-with-matplotlib">
+<h4>Plotting the PSD with matplotlib:<a class="headerlink" href="#plotting-the-psd-with-matplotlib" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">rtlsdr</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="p">()</span>
+
+<span class="c1"># configure device</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="mf">2.4e6</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">center_freq</span> <span class="o">=</span> <span class="mf">95e6</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">gain</span> <span class="o">=</span> <span class="mi">4</span>
+
+<span class="n">samples</span> <span class="o">=</span> <span class="n">sdr</span><span class="o">.</span><span class="n">read_samples</span><span class="p">(</span><span class="mi">256</span><span class="o">*</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">sdr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># use matplotlib to estimate and plot the PSD</span>
+<span class="n">psd</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">NFFT</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">Fs</span><span class="o">=</span><span class="n">sdr</span><span class="o">.</span><span class="n">sample_rate</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">Fc</span><span class="o">=</span><span class="n">sdr</span><span class="o">.</span><span class="n">center_freq</span><span class="o">/</span><span class="mf">1e6</span><span class="p">)</span>
+<span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency (MHz)&#39;</span><span class="p">)</span>
+<span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Relative power (dB)&#39;</span><span class="p">)</span>
+
+<span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="resulting-plot">
+<h4>Resulting Plot:<a class="headerlink" href="#resulting-plot" title="Permalink to this headline">¶</a></h4>
+<a class="reference external image-reference" href="https://i.imgur.com/hFhg8.png"><img alt="" src="https://i.imgur.com/hFhg8.png" /></a>
+<p>See the files ‘demo_waterfall.py’ and ‘test.py’ for more examples.</p>
+</div>
+</div>
+<div class="section" id="handling-multiple-devices">
+<h3>Handling multiple devices:<a class="headerlink" href="#handling-multiple-devices" title="Permalink to this headline">¶</a></h3>
+<p><em>(added in v2.5.6)</em></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rtlsdr</span> <span class="kn">import</span> <span class="n">RtlSdr</span>
+
+<span class="c1"># Get a list of detected device serial numbers (str)</span>
+<span class="n">serial_numbers</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="o">.</span><span class="n">get_device_serial_addresses</span><span class="p">()</span>
+
+<span class="c1"># Find the device index for a given serial number</span>
+<span class="n">device_index</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="o">.</span><span class="n">get_device_index_by_serial</span><span class="p">(</span><span class="s1">&#39;00000001&#39;</span><span class="p">)</span>
+
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="p">(</span><span class="n">device_index</span><span class="p">)</span>
+
+
+<span class="c1"># Or pass the serial number directly:</span>
+<span class="n">sdr</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="p">(</span><span class="n">serial_number</span><span class="o">=</span><span class="s1">&#39;00000001&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="note">
+<h4>Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h4>
+<p>Most devices by default have the same serial number: ‘0000001’. This can be set
+to a custom value by using the <a class="reference external" href="https://manpages.ubuntu.com/manpages/trusty/man1/rtl_eeprom.1.html">rtl_eeprom</a> utility packaged with <code class="docutils literal notranslate"><span class="pre">librtlsdr</span></code>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="experimental-features">
+<h2>Experimental features<a class="headerlink" href="#experimental-features" title="Permalink to this headline">¶</a></h2>
+<p>Two new submodules are available for testing: <strong>rtlsdraio</strong>, which adds native Python 3 asynchronous support (asyncio module), and <strong>rtlsdrtcp</strong> which adds a TCP server/client for accessing a device over the network. See the respective modules in the rtlsdr folder for more details and feel free to test and report any bugs!</p>
+<div class="section" id="rtlsdraio">
+<h3>rtlsdraio<a class="headerlink" href="#rtlsdraio" title="Permalink to this headline">¶</a></h3>
+<p>Note that the rtlsdraio module is automatically imported and adds <code class="docutils literal notranslate"><span class="pre">stream()</span></code> and <code class="docutils literal notranslate"><span class="pre">stop()</span></code> methods to the normal <code class="docutils literal notranslate"><span class="pre">RtlSdr</span></code> class. It also requires the new <code class="docutils literal notranslate"><span class="pre">async</span></code>/<code class="docutils literal notranslate"><span class="pre">await</span></code> syntax introduced in Python 3.5+.</p>
+<p>The syntax is basically:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">rtlsdr</span> <span class="kn">import</span> <span class="n">RtlSdr</span>
+
+<span class="n">async</span> <span class="k">def</span> <span class="nf">streaming</span><span class="p">():</span>
+    <span class="n">sdr</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="p">()</span>
+
+    <span class="n">async</span> <span class="k">for</span> <span class="n">samples</span> <span class="ow">in</span> <span class="n">sdr</span><span class="o">.</span><span class="n">stream</span><span class="p">():</span>
+        <span class="c1"># do something with samples</span>
+        <span class="c1"># ...</span>
+
+    <span class="c1"># to stop streaming:</span>
+    <span class="n">await</span> <span class="n">sdr</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+
+    <span class="c1"># done</span>
+    <span class="n">sdr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+<span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">streaming</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="rtlsdrtcp">
+<h3>rtlsdrtcp<a class="headerlink" href="#rtlsdrtcp" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">RtlSdrTcpServer</span></code> class is meant to be connected physically to an SDR dongle and communicate with an instance of <code class="docutils literal notranslate"><span class="pre">RtlSdrTcpClient</span></code>. The client is intended to function as closely as possible to the base RtlSdr class (as if it had a physical dongle attatched to it).</p>
+<p>Both of these classes have the same arguments as the base <code class="docutils literal notranslate"><span class="pre">RtlSdr</span></code> class with the addition of <code class="docutils literal notranslate"><span class="pre">hostname</span></code> and <code class="docutils literal notranslate"><span class="pre">port</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="o">=</span> <span class="n">RtlSdrTcpServer</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
+<span class="c1"># Will listen for clients until Ctrl-C is pressed</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># On another machine (typically)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">RtlSdrTcpClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">center_freq</span> <span class="o">=</span> <span class="mf">2e6</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">read_samples</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tcp-client-mode">
+<h3>TCP Client Mode<a class="headerlink" href="#tcp-client-mode" title="Permalink to this headline">¶</a></h3>
+<p>On platforms where the <code class="docutils literal notranslate"><span class="pre">librtlsdr</span></code> library cannot be installed/compiled, it is possible to import the <code class="docutils literal notranslate"><span class="pre">RtlSdrTcpClient</span></code> only by setting the environment variable <code class="docutils literal notranslate"><span class="pre">&quot;RTLSDR_CLIENT_MODE&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;true&quot;</span></code>. If this is set, no other modules will be available.</p>
+<p><em>Feature added in v0.2.4</em></p>
+</div>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Windows/Linux/OSX</li>
+<li>Python 2.7.x/3.3+</li>
+<li><a class="reference external" href="https://github.com/librtlsdr/librtlsdr/releases">librtlsdr</a></li>
+<li><strong>Optional</strong>: NumPy (wraps samples in a more convenient form)</li>
+</ul>
+<p>matplotlib is also useful for plotting data. The librtlsdr binaries (rtlsdr.dll in Windows and librtlsdr.so in Linux)
+should be in the pyrtlsdr directory, or a system path. Note that these binaries may have additional dependencies.</p>
+</div>
+<div class="section" id="todo">
+<h2>Todo<a class="headerlink" href="#todo" title="Permalink to this headline">¶</a></h2>
+<p>There are a few remaining functions in librtlsdr that haven’t been wrapped yet. It’s a simple process if there’s an additional
+function you need to add support for, and please send a pull request if you’d like to share your changes.</p>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Some operating systems (Linux, OS X) seem to result in libusb buffer issues when performing small reads. Try reading 1024
+(or higher powers of two) samples at a time if you have problems.</li>
+<li>If you’re having librtlsdr import errors:<ul>
+<li><strong>Windows</strong>: Make sure all the librtlsdr DLL files (librtlsdr.dll, libusb-1.0.dll) are in your system path, or the same folder
+as this README file. Also make sure you have all of <em>their</em> dependencies (e.g. libgcc_s_dw2-1.dll or possibly the Visual Studio runtime files). If rtl_sdr.exe
+works, then you should be okay. Also note that you can’t mix the 64 bit version of Python with 32 bit builds of librtlsdr, and vice versa.</li>
+<li><strong>Linux</strong>: Make sure your LD_LIBRARY_PATH environment variable contains the directory where the librtlsdr.so.0 library is located. You can do this in a shell with (for example): <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib</span></code>. See <a class="reference external" href="https://github.com/roger-/pyrtlsdr/issues/7">this issue</a> for more details.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>All of the code contained here is licensed by the GNU General Public License v3.</p>
+</div>
+<div class="section" id="credit">
+<h2>Credit<a class="headerlink" href="#credit" title="Permalink to this headline">¶</a></h2>
+<p>Credit to dbasden for his earlier wrapper <a class="reference external" href="https://github.com/dbasden/python-librtlsdr">python-librtlsdr</a> and all the
+contributers on GitHub.</p>
+<p>Copyright (C) 2013 by Roger <a class="reference external" href="https://github.com/roger">https://github.com/roger</a>-</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Reference.html" class="btn btn-neutral float-right" title="Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to pyrtlsdr’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Roger &lt;https://github.com/roger-/pyrtlsdr&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

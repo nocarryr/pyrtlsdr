@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rtlsdr.rtlsdrtcp.client &mdash; pyrtlsdr 0.2.91 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-26848999-11');
+</script>
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyrtlsdr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.91
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Reference.html">Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrtlsdr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>rtlsdr.rtlsdrtcp.client</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rtlsdr.rtlsdrtcp.client</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">CommunicationError</span><span class="p">,</span>
+    <span class="n">RtlSdrTcpBase</span><span class="p">,</span>
+    <span class="n">ClientMessage</span><span class="p">,</span>
+    <span class="n">ServerMessage</span><span class="p">,</span>
+    <span class="n">AckMessage</span><span class="p">,</span>
+    <span class="n">DEFAULT_READ_SIZE</span><span class="p">,</span>
+<span class="p">)</span>
+
+<div class="viewcode-block" id="RtlSdrTcpClient"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient">[docs]</a><span class="k">class</span> <span class="nc">RtlSdrTcpClient</span><span class="p">(</span><span class="n">RtlSdrTcpBase</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Client object that connects to a remote server.</span>
+
+<span class="sd">    Exposes most of the methods and descriptors that are available in the</span>
+<span class="sd">    RtlSdr class in a transparent manner allowing an interface that is nearly</span>
+<span class="sd">    identical to the core API.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">hostname</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RtlSdrTcpClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">device_index</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="p">,</span>
+                                              <span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.open"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_keep_alive</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device_opened</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.close"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device_opened</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+    <span class="k">def</span> <span class="nf">_build_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_socket&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_socket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span>
+                                             <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="nf">_close_socket</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keep_alive</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_socket&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;client closing socket&#39;</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_socket</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_communicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_message</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_socket</span><span class="p">()</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">tx_message</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">ServerMessage</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;server was unsuccessful. msg=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tx_message</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">CommunicationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">resp_data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">data</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">AckMessage</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">resp</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">CommunicationError</span><span class="p">(</span><span class="s1">&#39;ACK message recieved as &quot;NAK&quot;&#39;</span><span class="p">)</span>
+            <span class="n">resp_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_close_socket</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">resp_data</span>
+
+    <span class="k">def</span> <span class="nf">_communicate_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">arg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">ClientMessage</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;method&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">method_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_communicate_descriptor_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop_name</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">ClientMessage</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;prop_get&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prop_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_communicate_descriptor_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prop_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">ClientMessage</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;prop_set&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prop_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.get_center_freq"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_center_freq">[docs]</a>    <span class="k">def</span> <span class="nf">get_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_get</span><span class="p">(</span><span class="s1">&#39;fc&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.set_center_freq"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_center_freq">[docs]</a>    <span class="k">def</span> <span class="nf">set_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_set</span><span class="p">(</span><span class="s1">&#39;fc&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.get_sample_rate"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_sample_rate">[docs]</a>    <span class="k">def</span> <span class="nf">get_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_get</span><span class="p">(</span><span class="s1">&#39;rs&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.set_sample_rate"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_sample_rate">[docs]</a>    <span class="k">def</span> <span class="nf">set_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_set</span><span class="p">(</span><span class="s1">&#39;rs&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.get_bandwidth"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_bandwidth">[docs]</a>    <span class="k">def</span> <span class="nf">get_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_get</span><span class="p">(</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.set_bandwidth"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_bandwidth">[docs]</a>    <span class="k">def</span> <span class="nf">set_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_set</span><span class="p">(</span><span class="s1">&#39;bandwidth&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.get_gain"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_gain">[docs]</a>    <span class="k">def</span> <span class="nf">get_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_get</span><span class="p">(</span><span class="s1">&#39;gain&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.set_gain"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_gain">[docs]</a>    <span class="k">def</span> <span class="nf">set_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_set</span><span class="p">(</span><span class="s1">&#39;gain&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.get_freq_correction"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_freq_correction">[docs]</a>    <span class="k">def</span> <span class="nf">get_freq_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_get</span><span class="p">(</span><span class="s1">&#39;freq_correction&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.set_freq_correction"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_freq_correction">[docs]</a>    <span class="k">def</span> <span class="nf">set_freq_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_descriptor_set</span><span class="p">(</span><span class="s1">&#39;freq_correction&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.get_gains"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_gains">[docs]</a>    <span class="k">def</span> <span class="nf">get_gains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_method</span><span class="p">(</span><span class="s1">&#39;get_gains&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.get_tuner_type"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_tuner_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_tuner_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_method</span><span class="p">(</span><span class="s1">&#39;get_tuner_type&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.set_direct_sampling"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_direct_sampling">[docs]</a>    <span class="k">def</span> <span class="nf">set_direct_sampling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_method</span><span class="p">(</span><span class="s1">&#39;set_direct_sampling&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.read_bytes"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_bytes">[docs]</a>    <span class="k">def</span> <span class="nf">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_bytes</span><span class="o">=</span><span class="n">DEFAULT_READ_SIZE</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_method</span><span class="p">(</span><span class="s1">&#39;read_bytes&#39;</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.read_samples"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_samples">[docs]</a>    <span class="k">def</span> <span class="nf">read_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="n">DEFAULT_READ_SIZE</span><span class="p">):</span>
+        <span class="n">raw_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_communicate_method</span><span class="p">(</span><span class="s1">&#39;read_samples&#39;</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+        <span class="n">iq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_bytes_to_iq</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">iq</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.read_samples_async"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_samples_async">[docs]</a>    <span class="k">def</span> <span class="nf">read_samples_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Async read not available in TCP mode&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdrTcpClient.read_bytes_async"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_bytes_async">[docs]</a>    <span class="k">def</span> <span class="nf">read_bytes_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;Async read not available in TCP mode&#39;</span><span class="p">)</span></div>
+
+    <span class="n">center_freq</span> <span class="o">=</span> <span class="n">fc</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_center_freq</span><span class="p">,</span> <span class="n">set_center_freq</span><span class="p">)</span>
+    <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">rs</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_sample_rate</span><span class="p">,</span> <span class="n">set_sample_rate</span><span class="p">)</span>
+    <span class="n">bandwidth</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_bandwidth</span><span class="p">,</span> <span class="n">set_bandwidth</span><span class="p">)</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_gain</span><span class="p">,</span> <span class="n">set_gain</span><span class="p">)</span>
+    <span class="n">freq_correction</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_freq_correction</span><span class="p">,</span> <span class="n">set_freq_correction</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Roger &lt;https://github.com/roger-/pyrtlsdr&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

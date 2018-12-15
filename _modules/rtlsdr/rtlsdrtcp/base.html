@@ -1,0 +1,524 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rtlsdr.rtlsdrtcp.base &mdash; pyrtlsdr 0.2.91 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-26848999-11');
+</script>
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pyrtlsdr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.91
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../Overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Reference.html">Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyrtlsdr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>rtlsdr.rtlsdrtcp.base</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rtlsdr.rtlsdrtcp.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">select</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">izip</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">izip</span> <span class="o">=</span> <span class="nb">zip</span>
+
+<span class="n">has_numpy</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">has_numpy</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">PY2</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span>
+
+<span class="n">DEFAULT_READ_SIZE</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">MAX_BUFFER_SIZE</span> <span class="o">=</span> <span class="mi">4096</span>
+<span class="n">RECEIVE_TIMEOUT</span> <span class="o">=</span> <span class="mi">20</span>
+
+
+<div class="viewcode-block" id="CommunicationError"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.CommunicationError">[docs]</a><span class="k">class</span> <span class="nc">CommunicationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">source_exc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_exc</span> <span class="o">=</span> <span class="n">source_exc</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_exc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;SOURCE EXCEPTION:</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n\n</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">(),</span> <span class="n">s</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="RtlSdrTcpBase"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase">[docs]</a><span class="k">class</span> <span class="nc">RtlSdrTcpBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all ``rtlsdrtcp`` functionality</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        device_index (:obj:`int`, optional):</span>
+<span class="sd">        test_mode_enabled (:obj:`bool`, optional):</span>
+<span class="sd">        hostname (:obj:`str`, optional):</span>
+<span class="sd">        port (:obj:`int`, optional):</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use port 1235 as default since rtl_tcp uses 1234</span>
+    <span class="n">DEFAULT_PORT</span> <span class="o">=</span> <span class="mi">1235</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">hostname</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device_index</span> <span class="o">=</span> <span class="n">device_index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_mode_enabled</span> <span class="o">=</span> <span class="n">test_mode_enabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hostname</span> <span class="o">=</span> <span class="n">hostname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PORT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device_ready</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server_thread</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="RtlSdrTcpBase.packed_bytes_to_iq"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase.packed_bytes_to_iq">[docs]</a>    <span class="k">def</span> <span class="nf">packed_bytes_to_iq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A direct copy of :meth:`rtlsdr.BaseRtlSdr.packed_bytes_to_iq`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">has_numpy</span><span class="p">:</span>
+            <span class="c1"># use NumPy array</span>
+            <span class="n">iq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">bytes</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;complex&#39;</span><span class="p">)</span>
+            <span class="n">iq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">iq</span><span class="o">.</span><span class="n">imag</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">iq</span> <span class="o">/=</span> <span class="p">(</span><span class="mi">255</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">iq</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># use normal list</span>
+            <span class="n">iq</span> <span class="o">=</span> <span class="p">[</span><span class="nb">complex</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="p">(</span><span class="mi">255</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">q</span><span class="o">/</span><span class="p">(</span><span class="mi">255</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="nb">bytes</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])]</span>
+
+        <span class="k">return</span> <span class="n">iq</span></div></div>
+
+
+<span class="n">API_METHODS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;get_center_freq&#39;</span><span class="p">,</span> <span class="s1">&#39;set_center_freq&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_sample_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;set_sample_rate&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_bandwidth&#39;</span><span class="p">,</span> <span class="s1">&#39;set_bandwidth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_gain&#39;</span><span class="p">,</span> <span class="s1">&#39;set_gain&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_freq_correction&#39;</span><span class="p">,</span> <span class="s1">&#39;set_freq_correction&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_gains&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_tuner_type&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;set_direct_sampling&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;read_bytes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;read_samples&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">API_DESCRIPTORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;center_freq&#39;</span><span class="p">,</span> <span class="s1">&#39;fc&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sample_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;rs&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;bandwidth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;gain&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;freq_correction&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="MessageBase"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.MessageBase">[docs]</a><span class="k">class</span> <span class="nc">MessageBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for messages sent between clients and servers.</span>
+
+<span class="sd">    Hanldes serialization/deserialization and communication with</span>
+<span class="sd">    socket type objects.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        timestamp (float): Timestamp given from :func:`time.time`</span>
+<span class="sd">        header (dict): A ``dict`` containing message type and payload information</span>
+<span class="sd">        data: The payload containing either the request or response data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_header</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_send</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">PY2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([],</span> <span class="p">[</span><span class="n">sock</span><span class="p">],</span> <span class="p">[],</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sock</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">w</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CommunicationError</span><span class="p">(</span><span class="s1">&#39;socket </span><span class="si">%r</span><span class="s1"> not ready for write&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sock</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">sock</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_recv</span><span class="p">(</span><span class="n">sock</span><span class="p">):</span>
+        <span class="n">start_ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">sock</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="n">RECEIVE_TIMEOUT</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">CommunicationError</span><span class="p">(</span><span class="s1">&#39;No response from peer after </span><span class="si">%s</span><span class="s1"> seconds&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_ts</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">sock</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">r</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CommunicationError</span><span class="p">(</span><span class="s1">&#39;socket </span><span class="si">%r</span><span class="s1"> not ready for read&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sock</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">MAX_BUFFER_SIZE</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MessageBase.from_remote"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.MessageBase.from_remote">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_remote</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sock</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reads data from the socket and parses an instance of :class:`MessageBase`</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            sock: The :class:`~socket.socket` object to read from</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_recv</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">PY2</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ACK&#39;</span><span class="p">):</span>
+            <span class="bp">cls</span> <span class="o">=</span> <span class="n">AckMessage</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MessageBase.get_header"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.MessageBase.get_header">[docs]</a>    <span class="k">def</span> <span class="nf">get_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Builds the header data for the message</span>
+
+<span class="sd">        The :attr:`timestamp` is added to the header if not already present.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ts</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ts</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="MessageBase.get_data"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.MessageBase.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;header&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MessageBase.send_message"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.MessageBase.send_message">[docs]</a>    <span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Serializes and sends the message</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            sock: The :class:`~socket.socket` object to write to</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MessageBase.get_response"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.MessageBase.get_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Waits for a specific response message</span>
+
+<span class="sd">        The message class returned from :meth:`get_response_class` is used</span>
+<span class="sd">        to parse the message (called from :meth:`from_remote`)</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            sock: The :class:`~socket.socket` object to read from</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response_class</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_remote</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MessageBase.get_ack_response"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.MessageBase.get_ack_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_ack_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">AckMessage</span><span class="o">.</span><span class="n">from_remote</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Serializes the message header and data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">struct_fmt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;struct_fmt&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">struct_fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="AckMessage"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.AckMessage">[docs]</a><span class="k">class</span> <span class="nc">AckMessage</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simple message type meant for ACKnolegemnt of message receipt</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AckMessage.get_header"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.AckMessage.get_header">[docs]</a>    <span class="k">def</span> <span class="nf">get_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AckMessage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_header</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;ACK&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;ok&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span></div></div>
+
+
+<div class="viewcode-block" id="ServerMessage"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ServerMessage">[docs]</a><span class="k">class</span> <span class="nc">ServerMessage</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ServerMessage.from_remote"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ServerMessage.from_remote">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_remote</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sock</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reads data for the socket buffer and reconstructs the appropriate</span>
+<span class="sd">        message that was sent by the other end.</span>
+
+<span class="sd">        This method is used by clients to reconstruct ServerMessage objects</span>
+<span class="sd">        and if necessary, use multiple read calls to get the entire message</span>
+<span class="sd">        (if the message size is greater than the buffer length)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_recv</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">PY2</span><span class="p">:</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+        <span class="n">struct_fmt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;struct_fmt&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">struct_fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">struct_fmt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">struct_fmt</span><span class="p">)</span>
+            <span class="n">data_len</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">struct_fmt</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">ack_msg</span> <span class="o">=</span> <span class="n">AckMessage</span><span class="p">()</span>
+        <span class="n">ack_msg</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+        <span class="n">recv</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">while</span> <span class="n">data_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">_recv</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_recv</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">recv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">recv</span> <span class="o">=</span> <span class="n">_recv</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">recv</span> <span class="o">+=</span> <span class="n">_recv</span>
+            <span class="n">data_len</span> <span class="o">-=</span> <span class="nb">len</span><span class="p">(</span><span class="n">_recv</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">struct_fmt</span><span class="p">,</span> <span class="n">recv</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ServerMessage.send_message"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ServerMessage.send_message">[docs]</a>    <span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sends the message data to clients.</span>
+
+<span class="sd">        If necessary, uses multiple calls to send to ensure all data has</span>
+<span class="sd">        actually been sent through the socket objects&#39;s buffer.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">header</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_serialize</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">header</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">struct_fmt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;struct_fmt&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">struct_fmt</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">struct_fmt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">struct_fmt</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">struct_fmt</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+            <span class="n">data_len</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">calcsize</span><span class="p">(</span><span class="n">struct_fmt</span><span class="p">)</span>
+            <span class="n">ack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ack_response</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ack</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">CommunicationError</span><span class="p">(</span><span class="s1">&#39;No ACK received&#39;</span><span class="p">)</span>
+            <span class="k">while</span> <span class="n">data_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">sent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_send</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                <span class="n">data_len</span> <span class="o">-=</span> <span class="n">sent</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">sent</span><span class="p">:]</span></div>
+
+<div class="viewcode-block" id="ServerMessage.get_header"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ServerMessage.get_header">[docs]</a>    <span class="k">def</span> <span class="nf">get_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ServerMessage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_header</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">client_message</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;client_message&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">client_message</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_message</span><span class="o">.</span><span class="n">header</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">d</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ServerMessage.get_data"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ServerMessage.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ServerMessage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;struct_fmt&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;struct_fmt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;struct_fmt&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ServerMessage.get_response_class"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ServerMessage.get_response_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_response_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">AckMessage</span></div></div>
+
+
+<div class="viewcode-block" id="ClientMessage"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ClientMessage">[docs]</a><span class="k">class</span> <span class="nc">ClientMessage</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
+<div class="viewcode-block" id="ClientMessage.send_message"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ClientMessage.send_message">[docs]</a>    <span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sock</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClientMessage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_response</span><span class="p">(</span><span class="n">sock</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ClientMessage.get_header"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ClientMessage.get_header">[docs]</a>    <span class="k">def</span> <span class="nf">get_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">ClientMessage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_header</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+<div class="viewcode-block" id="ClientMessage.get_response_class"><a class="viewcode-back" href="../../../rtlsdrtcp.html#rtlsdr.rtlsdrtcp.base.ClientMessage.get_response_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_response_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ServerMessage</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Roger &lt;https://github.com/roger-/pyrtlsdr&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

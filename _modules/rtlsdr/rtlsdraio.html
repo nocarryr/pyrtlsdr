@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rtlsdr.rtlsdraio &mdash; pyrtlsdr 0.2.91 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-26848999-11');
+</script>
+
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyrtlsdr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.91
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Reference.html">Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrtlsdr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>rtlsdr.rtlsdraio</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rtlsdr.rtlsdraio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module adds :mod:`asyncio` support for reading samples from the device.</span>
+
+<span class="sd">The main functionality can be found in the :meth:`~rtlsdr.rtlsdraio.RtlSdrAio.stream`</span>
+<span class="sd">method of :class:`rtlsdr.rtlsdraio.RtlSdrAio`.</span>
+
+<span class="sd">Example:</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">       import asyncio</span>
+<span class="sd">       from rtlsdr import RtlSdr</span>
+
+<span class="sd">       async def streaming():</span>
+<span class="sd">           sdr = RtlSdr()</span>
+
+<span class="sd">           async for samples in sdr.stream():</span>
+<span class="sd">               # do something with samples</span>
+<span class="sd">               # ...</span>
+
+<span class="sd">           # to stop streaming:</span>
+<span class="sd">           await sdr.stop()</span>
+
+<span class="sd">           # done</span>
+<span class="sd">           sdr.close()</span>
+
+<span class="sd">       loop = asyncio.get_event_loop()</span>
+<span class="sd">       loop.run_until_complete(streaming())</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">asyncio</span>
+    <span class="n">AIO_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">AIO_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="kn">from</span> <span class="nn">.rtlsdr</span> <span class="k">import</span> <span class="n">RtlSdr</span>
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">_CLASS_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">class AsyncCallbackIter:</span>
+<span class="s2">    &#39;&#39;&#39;Convert a callback-based legacy async function into one supporting asyncio</span>
+<span class="s2">    and Python 3.5+</span>
+
+<span class="s2">    The queued data can be iterated using ``async for``</span>
+
+<span class="s2">    Arguments:</span>
+<span class="s2">        func_start: A callable which should take a single callback that will be</span>
+<span class="s2">            passed data. Will be run in a seperate thread in case it blocks.</span>
+<span class="s2">        func_stop (optional): A callable to stop ``func_start`` from calling the</span>
+<span class="s2">            callback. Will be run in a seperate thread in case it blocks.</span>
+<span class="s2">        queue_size (:obj:`int`, optional): The maximum amount of data</span>
+<span class="s2">            that will be buffered.</span>
+<span class="s2">        loop (optional): The ``asyncio.event_loop`` to use. If not supplied,</span>
+<span class="s2">            :func:`asyncio.get_event_loop` will be used.</span>
+
+<span class="s2">    &#39;&#39;&#39;</span>
+
+<span class="s2">    def __init__(self, func_start, func_stop=None, queue_size=20, *, loop=None):</span>
+<span class="s2">        self.queue = asyncio.Queue(queue_size)</span>
+<span class="s2">        self.loop = loop if loop else asyncio.get_event_loop()</span>
+<span class="s2">        self.func_stop = func_stop</span>
+<span class="s2">        self.func_start = func_start</span>
+
+<span class="s2">        self.running = False</span>
+
+<span class="s2">    async def add_to_queue(self, *args):</span>
+<span class="s2">        &#39;&#39;&#39;Add items to the queue</span>
+
+<span class="s2">        Arguments:</span>
+<span class="s2">            *args: Arguments to be added</span>
+
+<span class="s2">        This method is a :obj:`~asyncio.coroutine`</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+<span class="s2">        try:</span>
+<span class="s2">            self.queue.put_nowait(args)</span>
+<span class="s2">        except asyncio.QueueFull:</span>
+<span class="s2">            log.info(&#39;extra callback data lost&#39;)</span>
+
+<span class="s2">    def _callback(self, *args):</span>
+<span class="s2">        if not self.running:</span>
+<span class="s2">            return</span>
+<span class="s2">        asyncio.run_coroutine_threadsafe(self.add_to_queue(*args), self.loop)</span>
+
+<span class="s2">    async def start(self):</span>
+<span class="s2">        &#39;&#39;&#39;Start the execution</span>
+
+<span class="s2">        The callback given by ``func_start`` will be called by</span>
+<span class="s2">        :meth:`asyncio.AbstractEventLoop.run_in_executor` and will continue</span>
+<span class="s2">        until :meth:`stop` is called.</span>
+
+<span class="s2">        This method is a :obj:`~asyncio.coroutine`</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+
+<span class="s2">        assert(not self.running)</span>
+
+<span class="s2">        # start legacy async function</span>
+<span class="s2">        future = self.loop.run_in_executor(None, self.func_start, self._callback)</span>
+<span class="s2">        asyncio.ensure_future(future, loop=self.loop)</span>
+<span class="s2">        self.executor_task = future</span>
+<span class="s2">        self.running = True</span>
+
+<span class="s2">    async def stop(self):</span>
+<span class="s2">        &#39;&#39;&#39;Stop the running executor task</span>
+
+<span class="s2">        If ``func_stop`` was supplied, it will be called after the queue has</span>
+<span class="s2">        been exhausted.</span>
+
+<span class="s2">        This method is a :obj:`~asyncio.coroutine`</span>
+<span class="s2">        &#39;&#39;&#39;</span>
+
+<span class="s2">        assert(self.running)</span>
+
+<span class="s2">        self.running = False</span>
+
+<span class="s2">        # send a signal to stop</span>
+<span class="s2">        iter_stopped = False</span>
+<span class="s2">        while not iter_stopped:</span>
+<span class="s2">            try:</span>
+<span class="s2">                self.queue.put_nowait((StopAsyncIteration(),))</span>
+<span class="s2">                iter_stopped = True</span>
+<span class="s2">            except asyncio.QueueFull:</span>
+<span class="s2">                try:</span>
+<span class="s2">                    self.queue.task_done()</span>
+<span class="s2">                except ValueError:</span>
+<span class="s2">                    pass</span>
+<span class="s2">        if self.func_stop:</span>
+<span class="s2">            # stop legacy async function</span>
+<span class="s2">            await self.loop.run_in_executor(None, self.func_stop)</span>
+<span class="s2">        await self.executor_task</span>
+
+<span class="s2">    def __aiter__(self):</span>
+<span class="s2">        return self</span>
+
+<span class="s2">    async def __anext__(self):</span>
+<span class="s2">        val = await self.queue.get()</span>
+<span class="s2">        self.queue.task_done()</span>
+
+<span class="s2">        if isinstance(val[0], StopAsyncIteration):</span>
+<span class="s2">            raise StopAsyncIteration</span>
+
+<span class="s2">        #return val if len(val) &gt; 1 else val[0]</span>
+
+<span class="s2">        # slight hack for rtlsdr to ignore context object</span>
+<span class="s2">        return val[0]</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="k">if</span> <span class="n">AIO_AVAILABLE</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">exec</span><span class="p">(</span><span class="s1">&#39;async def test_for_async(): pass&#39;</span><span class="p">)</span>
+        <span class="n">exec</span><span class="p">(</span><span class="s1">&#39;def test_unpack_operators(a, *, b): pass&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">SyntaxError</span><span class="p">:</span>
+        <span class="n">AIO_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">if</span> <span class="n">AIO_AVAILABLE</span><span class="p">:</span>
+    <span class="n">exec</span><span class="p">(</span><span class="n">_CLASS_TEMPLATE</span><span class="p">,</span> <span class="nb">globals</span><span class="p">(),</span> <span class="nb">locals</span><span class="p">())</span>
+
+<div class="viewcode-block" id="RtlSdrAio"><a class="viewcode-back" href="../../rtlsdraio.html#rtlsdr.rtlsdraio.RtlSdrAio">[docs]</a><span class="k">class</span> <span class="nc">RtlSdrAio</span><span class="p">(</span><span class="n">RtlSdr</span><span class="p">):</span>
+    <span class="n">DEFAULT_READ_SIZE</span> <span class="o">=</span> <span class="mi">128</span><span class="o">*</span><span class="mi">1024</span>
+
+<div class="viewcode-block" id="RtlSdrAio.stream"><a class="viewcode-back" href="../../rtlsdraio.html#rtlsdr.rtlsdraio.RtlSdrAio.stream">[docs]</a>    <span class="k">def</span> <span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples_or_bytes</span><span class="o">=</span><span class="n">DEFAULT_READ_SIZE</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;samples&#39;</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Start async streaming from SDR and return an async iterator (Python 3.5+).</span>
+
+<span class="sd">        The :meth:`read_samples_async` method is called in an  :class:`~concurrent.futures.Excecutor`</span>
+<span class="sd">        instance using :meth:`asyncio.AbstractEventLoop.run_in_executor`.</span>
+
+<span class="sd">        The returned asynchronous iterable can then used to retrieve sample</span>
+<span class="sd">        data using ``async for`` syntax.</span>
+
+<span class="sd">        Calling the :meth:`~rtlsdr.rtlsdraio.RtlSdrAio.stop` method will stop</span>
+<span class="sd">        the ``read_samples_async`` session and close the ``Excecutor`` task.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            num_samples_or_bytes (int): The number of bytes/samples that will be</span>
+<span class="sd">                returned each iteration</span>
+<span class="sd">            format (:obj:`str`, optional): Specifies whether raw data (&quot;bytes&quot;)</span>
+<span class="sd">                or IQ samples (&quot;samples&quot;) will be returned</span>
+<span class="sd">            loop (optional): An asyncio event loop</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An ``asynchronous iterator`` to yield sample data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;samples&#39;</span><span class="p">:</span>
+            <span class="n">func_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_samples_async</span>
+        <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;bytes&#39;</span><span class="p">:</span>
+            <span class="n">func_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_bytes_async</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;format &quot;</span><span class="si">%s</span><span class="s1">&quot; not supported&#39;</span> <span class="o">%</span> <span class="nb">format</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">async_iter</span> <span class="o">=</span> <span class="n">AsyncCallbackIter</span><span class="p">(</span><span class="n">func_start</span><span class="o">=</span><span class="k">lambda</span> <span class="n">cb</span><span class="p">:</span> <span class="n">func_start</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="n">num_samples_or_bytes</span><span class="p">),</span>
+                                            <span class="n">func_stop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_read_async</span><span class="p">,</span>
+                                            <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">async_iter</span><span class="o">.</span><span class="n">start</span><span class="p">(),</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">async_iter</span></div>
+
+<div class="viewcode-block" id="RtlSdrAio.stop"><a class="viewcode-back" href="../../rtlsdraio.html#rtlsdr.rtlsdraio.RtlSdrAio.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stop async stream</span>
+
+<span class="sd">        Stops the ``read_samples_async`` and ``Excecutor`` task created by</span>
+<span class="sd">        :meth:`stream`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">async_iter</span><span class="o">.</span><span class="n">stop</span><span class="p">(),</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">async_iter</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Roger &lt;https://github.com/roger-/pyrtlsdr&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

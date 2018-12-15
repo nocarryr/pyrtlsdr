@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rtlsdr module &mdash; pyrtlsdr 0.2.91 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rtlsdraio module" href="rtlsdraio.html" />
+    <link rel="prev" title="Reference" href="Reference.html" />
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-26848999-11');
+</script>
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyrtlsdr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.91
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Reference.html">Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">rtlsdr module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtlsdraio.html">rtlsdraio module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtlsdrtcp.html">rtlsdr.rtlsdrtcp package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html">helpers module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyrtlsdr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="Reference.html">Reference</a> &raquo;</li>
+        
+      <li>rtlsdr module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/rtlsdr.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-rtlsdr.rtlsdr">
+<span id="rtlsdr-module"></span><h1>rtlsdr module<a class="headerlink" href="#module-rtlsdr.rtlsdr" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdr.</code><code class="descname">BaseRtlSdr</code><span class="sig-paren">(</span><em>device_index=0</em>, <em>test_mode_enabled=False</em>, <em>serial_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Core interface for most API functionality</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device_index</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – The device index to use if there are
+multiple dongles attached.  If only one is being used,
+the default value (0) will be used.</li>
+<li><strong>test_mode_enabled</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – If True, enables a special
+test mode, which will return the value of an internal RTL2832
+8-bit counter with calls to <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_bytes" title="rtlsdr.rtlsdr.BaseRtlSdr.read_bytes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes()</span></code></a>.</li>
+<li><strong>serial_number</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – If not None, the device will be searched
+for by the given serial_number by <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.get_device_index_by_serial" title="rtlsdr.rtlsdr.BaseRtlSdr.get_device_index_by_serial"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_device_index_by_serial()</span></code></a>
+and the <code class="docutils literal notranslate"><span class="pre">device_index</span></code> returned will be used automatically.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_GAIN">
+<code class="descname">DEFAULT_GAIN</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_GAIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.gain" title="rtlsdr.rtlsdr.BaseRtlSdr.gain"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gain</span></code></a> value used on initialization: <code class="docutils literal notranslate"><span class="pre">'auto'</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_FC">
+<code class="descname">DEFAULT_FC</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_FC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.center_freq" title="rtlsdr.rtlsdr.BaseRtlSdr.center_freq"><code class="xref py py-attr docutils literal notranslate"><span class="pre">center_freq</span></code></a> value used on
+initialization: <code class="docutils literal notranslate"><span class="pre">80e6</span></code> (80 Mhz)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_RS">
+<code class="descname">DEFAULT_RS</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_RS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.sample_rate" title="rtlsdr.rtlsdr.BaseRtlSdr.sample_rate"><code class="xref py py-attr docutils literal notranslate"><span class="pre">sample_rate</span></code></a> value used on
+initialization: <code class="docutils literal notranslate"><span class="pre">1.024e6</span></code> (1024 Msps)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_READ_SIZE">
+<code class="descname">DEFAULT_READ_SIZE</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_READ_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default number of samples or bytes to read
+if no arguments are supplied for <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_bytes" title="rtlsdr.rtlsdr.BaseRtlSdr.read_bytes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes()</span></code></a>
+or <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_samples" title="rtlsdr.rtlsdr.BaseRtlSdr.read_samples"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_samples()</span></code></a>.  Default value is <code class="docutils literal notranslate"><span class="pre">1024</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.gain_values">
+<code class="descname">gain_values</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.gain_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>The valid gain parameters supported by the device
+(in tenths of dB). These are stored as returned by <code class="docutils literal notranslate"><span class="pre">librtlsdr</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a>(<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.valid_gains_db">
+<code class="descname">valid_gains_db</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.valid_gains_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>The valid gains in dB</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a>(<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.get_device_index_by_serial">
+<em class="property">static </em><code class="descname">get_device_index_by_serial</code><span class="sig-paren">(</span><em>serial</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.get_device_index_by_serial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.get_device_index_by_serial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the device index for a device matching the given serial number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>serial</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><em>str</em></a>) – The serial number to search for</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The device_index as reported by <code class="docutils literal notranslate"><span class="pre">librtlsdr</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Most devices by default have the same serial number: <cite>‘0000001’</cite>.
+This can be set to a custom value by using the <a class="reference external" href="http://manpages.ubuntu.com/manpages/trusty/man1/rtl_eeprom.1.html">rtl_eeprom</a> utility
+packaged with <code class="docutils literal notranslate"><span class="pre">librtlsdr</span></code>.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.get_device_serial_addresses">
+<em class="property">static </em><code class="descname">get_device_serial_addresses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.get_device_serial_addresses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.get_device_serial_addresses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get serial numbers for all attached devices</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A <code class="docutils literal notranslate"><span class="pre">list</span></code> of all detected serial numbers (<code class="docutils literal notranslate"><span class="pre">str</span></code>)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a>(<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.get_gains">
+<code class="descname">get_gains</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.get_gains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.get_gains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all supported gain values from driver</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Gains in tenths of a dB</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)">list</a>(<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a>)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.get_tuner_type">
+<code class="descname">get_tuner_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.get_tuner_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.get_tuner_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the tuner type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The tuner type as reported by the driver.
+See the <a class="reference external" href="https://github.com/librtlsdr/librtlsdr/blob/c7d970ac5b70e897501909a48b2b32d4bfb16979/include/rtl-sdr.h#L185-L201">tuner enum definition</a> for more information.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.init_device_values">
+<code class="descname">init_device_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.init_device_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.init_device_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves information from the device</p>
+<p>This method acquires the values for <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.gain_values" title="rtlsdr.rtlsdr.BaseRtlSdr.gain_values"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gain_values</span></code></a>. Also sets the
+device to the default <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_FC" title="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_FC"><code class="xref py py-attr docutils literal notranslate"><span class="pre">center</span> <span class="pre">frequency</span></code></a>, the
+<a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_RS" title="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_RS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">sample</span> <span class="pre">rate</span></code></a> and <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_GAIN" title="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_GAIN"><code class="xref py py-attr docutils literal notranslate"><span class="pre">gain</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>device_index=0</em>, <em>test_mode_enabled=False</em>, <em>serial_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to the device through the underlying wrapper library</p>
+<p>Initializes communication with the device and retrieves information
+from it with a call to <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.init_device_values" title="rtlsdr.rtlsdr.BaseRtlSdr.init_device_values"><code class="xref py py-meth docutils literal notranslate"><span class="pre">init_device_values()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device_index</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – The device index to use if there are
+multiple dongles attached.  If only one is being used,
+the default value (0) will be used.</li>
+<li><strong>test_mode_enabled</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – If True, enables a special
+test mode, which will return the value of an internal RTL2832
+8-bit counter with calls to <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_bytes" title="rtlsdr.rtlsdr.BaseRtlSdr.read_bytes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes()</span></code></a>.</li>
+<li><strong>serial_number</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – If not None, the device will be searched
+for by the given serial_number by <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.get_device_index_by_serial" title="rtlsdr.rtlsdr.BaseRtlSdr.get_device_index_by_serial"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_device_index_by_serial()</span></code></a>
+and the <code class="docutils literal notranslate"><span class="pre">device_index</span></code> returned will be used automatically.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The arguments used here are passed directly from object
+initialization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/exceptions.html#IOError" title="(in Python v3.5)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">IOError</span></code></a> – If communication with the device could not be established.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.packed_bytes_to_iq">
+<code class="descname">packed_bytes_to_iq</code><span class="sig-paren">(</span><em>bytes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.packed_bytes_to_iq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.packed_bytes_to_iq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack a sequence of bytes to a sequence of normalized complex numbers</p>
+<p>This is called automatically by <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_samples" title="rtlsdr.rtlsdr.BaseRtlSdr.read_samples"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_samples()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The unpacked iq values as either a <a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> or
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> (if available).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.read_bytes">
+<code class="descname">read_bytes</code><span class="sig-paren">(</span><em>num_bytes=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.read_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read specified number of bytes from tuner.</p>
+<p>Does not attempt to unpack complex samples (see <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_samples" title="rtlsdr.rtlsdr.BaseRtlSdr.read_samples"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_samples()</span></code></a>),
+and data may be unsafe as buffer is reused.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_bytes</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – The number of bytes to read.
+Defaults to <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_READ_SIZE" title="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_READ_SIZE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DEFAULT_READ_SIZE</span></code></a>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A buffer of len(num_bytes) containing the raw samples read.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/ctypes.html#ctypes.Array" title="(in Python v3.5)">ctypes.Array</a>[c_ubyte]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.read_samples">
+<code class="descname">read_samples</code><span class="sig-paren">(</span><em>num_samples=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.read_samples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read specified number of complex samples from tuner.</p>
+<p>Real and imaginary parts are normalized to be in the range [-1, 1].
+Data is safe after this call (will not get overwritten by another one).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_samples</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – Number of samples to read.
+Defaults to <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_READ_SIZE" title="rtlsdr.rtlsdr.BaseRtlSdr.DEFAULT_READ_SIZE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DEFAULT_READ_SIZE</span></code></a>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The samples read as either a <a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#list" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>
+(if available).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.set_agc_mode">
+<code class="descname">set_agc_mode</code><span class="sig-paren">(</span><em>enabled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.set_agc_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.set_agc_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable RTL2832 AGC</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) – </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.set_direct_sampling">
+<code class="descname">set_direct_sampling</code><span class="sig-paren">(</span><em>direct</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.set_direct_sampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.set_direct_sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable direct sampling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>direct</strong> – If False or 0, disable direct sampling.  If ‘i’ or 1,
+use ADC I input.  If ‘q’ or 2, use ADC Q input.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.set_manual_gain_enabled">
+<code class="descname">set_manual_gain_enabled</code><span class="sig-paren">(</span><em>enabled</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#BaseRtlSdr.set_manual_gain_enabled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.set_manual_gain_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable or disable manual gain control of tuner.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><em>bool</em></a>) – </td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">enabled</span></code> is False, then AGC should also be used by calling
+<a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.set_agc_mode" title="rtlsdr.rtlsdr.BaseRtlSdr.set_agc_mode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_agc_mode()</span></code></a>. It is recommended to use <code class="xref py py-meth docutils literal notranslate"><span class="pre">set_gain()</span></code>
+instead of calling this method directly.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.bandwidth">
+<code class="descname">bandwidth</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/Set bandwidth value (in Hz)</p>
+<p>Set value to 0 (default) for automatic bandwidth selection.</p>
+<p class="rubric">Notes</p>
+<p>This value is stored locally and may not reflect the real tuner bandwidth</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.center_freq">
+<code class="descname">center_freq</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.center_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/Set the center frequency of the device (in Hz)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.fc">
+<code class="descname">fc</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.fc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/Set the center frequency of the device (in Hz)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.freq_correction">
+<code class="descname">freq_correction</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.freq_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/Set frequency offset of the tuner (in PPM)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.gain">
+<code class="descname">gain</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/Set gain of the tuner (in dB)</p>
+<p class="rubric">Notes</p>
+<p>If set to ‘auto’, AGC mode is enabled; otherwise gain is in dB.
+The actual gain used is rounded to the nearest value supported by
+the device (see the values in <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.valid_gains_db" title="rtlsdr.rtlsdr.BaseRtlSdr.valid_gains_db"><code class="xref py py-attr docutils literal notranslate"><span class="pre">valid_gains_db</span></code></a>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a> or <a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.rs">
+<code class="descname">rs</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.rs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/Set the sample rate of the tuner (in Hz)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdr.BaseRtlSdr.sample_rate">
+<code class="descname">sample_rate</code><a class="headerlink" href="#rtlsdr.rtlsdr.BaseRtlSdr.sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get/Set the sample rate of the tuner (in Hz)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)">int</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdr.RtlSdr">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdr.</code><code class="descname">RtlSdr</code><span class="sig-paren">(</span><em>device_index=0</em>, <em>test_mode_enabled=False</em>, <em>serial_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#RtlSdr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.RtlSdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr" title="rtlsdr.rtlsdr.BaseRtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdr.BaseRtlSdr</span></code></a></p>
+<p>This adds async read support to <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr" title="rtlsdr.rtlsdr.BaseRtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRtlSdr</span></code></a></p>
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.RtlSdr._bytes_converter_callback">
+<code class="descname">_bytes_converter_callback</code><span class="sig-paren">(</span><em>raw_buffer</em>, <em>num_bytes</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#RtlSdr._bytes_converter_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.RtlSdr._bytes_converter_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the raw buffer used in <code class="docutils literal notranslate"><span class="pre">rtlsdr_read_async</span></code> to a usable type</p>
+<p>This method is used internally by <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr.read_bytes_async" title="rtlsdr.rtlsdr.RtlSdr.read_bytes_async"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes_async()</span></code></a> to convert
+the raw data from <code class="docutils literal notranslate"><span class="pre">rtlsdr_read_async</span></code> into a memory-safe array.</p>
+<p>The callback given in <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr.read_bytes_async" title="rtlsdr.rtlsdr.RtlSdr.read_bytes_async"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes_async()</span></code></a> will then be called
+with the signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">callback</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>raw_buffer</strong> – Buffer of type <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">char</span></code></li>
+<li><strong>num_bytes</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Length of <code class="docutils literal notranslate"><span class="pre">raw_buffer</span></code></li>
+<li><strong>context</strong> – User-defined value passed to <code class="docutils literal notranslate"><span class="pre">rtlsdr_read_async</span></code>.
+In most cases, will be a reference to the <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr" title="rtlsdr.rtlsdr.RtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdr</span></code></a> instance</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This method is not meant to be called directly or
+overridden by subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.RtlSdr._samples_converter_callback">
+<code class="descname">_samples_converter_callback</code><span class="sig-paren">(</span><em>buffer</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#RtlSdr._samples_converter_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.RtlSdr._samples_converter_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the raw buffer used in <code class="docutils literal notranslate"><span class="pre">rtlsdr_read_async</span></code> to a usable type</p>
+<p>This method is used internally by <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr.read_samples_async" title="rtlsdr.rtlsdr.RtlSdr.read_samples_async"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_samples_async()</span></code></a> to convert
+the data into a sequence of complex numbers.</p>
+<p>The callback given in <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr.read_samples_async" title="rtlsdr.rtlsdr.RtlSdr.read_samples_async"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_samples_async()</span></code></a> will then be called
+with the signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">callback</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>buffer</strong> – Buffer of type <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">char</span></code></li>
+<li><strong>context</strong> – User-defined value passed to <code class="docutils literal notranslate"><span class="pre">rtlsdr_read_async</span></code>.
+In most cases, will be a reference to the <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr" title="rtlsdr.rtlsdr.RtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdr</span></code></a> instance</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This method is not meant to be called directly or
+overridden by subclasses.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.RtlSdr.cancel_read_async">
+<code class="descname">cancel_read_async</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#RtlSdr.cancel_read_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.RtlSdr.cancel_read_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancel async read.
+This should be called eventually when using async reads
+(<a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr.read_bytes_async" title="rtlsdr.rtlsdr.RtlSdr.read_bytes_async"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes_async()</span></code></a> or <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr.read_samples_async" title="rtlsdr.rtlsdr.RtlSdr.read_samples_async"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_samples_async()</span></code></a>),
+or callbacks will never stop.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="helpers.html#rtlsdr.helpers.limit_time" title="rtlsdr.helpers.limit_time"><code class="xref py py-func docutils literal notranslate"><span class="pre">limit_time()</span></code></a> and
+<a class="reference internal" href="helpers.html#rtlsdr.helpers.limit_calls" title="rtlsdr.helpers.limit_calls"><code class="xref py py-func docutils literal notranslate"><span class="pre">limit_calls()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.RtlSdr.read_bytes_async">
+<code class="descname">read_bytes_async</code><span class="sig-paren">(</span><em>callback</em>, <em>num_bytes=1024</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#RtlSdr.read_bytes_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.RtlSdr.read_bytes_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continuously read bytes from tuner</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>callback</strong> – A function or method that will be called with the result.
+See <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr._bytes_converter_callback" title="rtlsdr.rtlsdr.RtlSdr._bytes_converter_callback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_bytes_converter_callback()</span></code></a> for the signature.</li>
+<li><strong>num_bytes</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of bytes to read for each callback.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">DEFAULT_READ_SIZE</span></code>.</li>
+<li><strong>context</strong> (<em>Optional</em>) – Object to be passed as an argument to the callback.
+If not supplied or None, the <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr" title="rtlsdr.rtlsdr.RtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdr</span></code></a> instance
+will be used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>As with <a class="reference internal" href="#rtlsdr.rtlsdr.BaseRtlSdr.read_bytes" title="rtlsdr.rtlsdr.BaseRtlSdr.read_bytes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes()</span></code></a>, the data passed to the
+callback may by overwritten.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdr.RtlSdr.read_samples_async">
+<code class="descname">read_samples_async</code><span class="sig-paren">(</span><em>callback</em>, <em>num_samples=1024</em>, <em>context=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdr.html#RtlSdr.read_samples_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdr.RtlSdr.read_samples_async" title="Permalink to this definition">¶</a></dt>
+<dd><p>Continuously read ‘samples’ from the tuner</p>
+<p>This is a combination of <code class="xref py py-meth docutils literal notranslate"><span class="pre">read_samples()</span></code> and <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr.read_bytes_async" title="rtlsdr.rtlsdr.RtlSdr.read_bytes_async"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes_async()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>callback</strong> – A function or method that will be called with the result.
+See <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr._samples_converter_callback" title="rtlsdr.rtlsdr.RtlSdr._samples_converter_callback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_samples_converter_callback()</span></code></a> for the signature.</li>
+<li><strong>num_samples</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – The number of samples read into each callback.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">DEFAULT_READ_SIZE</span></code>.</li>
+<li><strong>context</strong> (<em>Optional</em>) – Object to be passed as an argument to the callback.
+If not supplied or None, the <a class="reference internal" href="#rtlsdr.rtlsdr.RtlSdr" title="rtlsdr.rtlsdr.RtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdr</span></code></a> instance
+will be used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rtlsdraio.html" class="btn btn-neutral float-right" title="rtlsdraio module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Reference.html" class="btn btn-neutral" title="Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Roger &lt;https://github.com/roger-/pyrtlsdr&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

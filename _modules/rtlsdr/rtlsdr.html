@@ -1,0 +1,907 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rtlsdr.rtlsdr &mdash; pyrtlsdr 0.2.91 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-26848999-11');
+</script>
+
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pyrtlsdr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.91
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Reference.html">Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyrtlsdr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>rtlsdr.rtlsdr</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for rtlsdr.rtlsdr</h1><div class="highlight"><pre>
+<span></span><span class="c1">#    This file is part of pyrlsdr.</span>
+<span class="c1">#    Copyright (C) 2013 by Roger &lt;https://github.com/roger-/pyrtlsdr&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#    pyrlsdr is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c1">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#    (at your option) any later version.</span>
+
+<span class="c1">#    pyrlsdr is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1">#    You should have received a copy of the GNU General Public License</span>
+<span class="c1">#    along with pyrlsdr.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.librtlsdr</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">librtlsdr</span><span class="p">,</span>
+    <span class="n">p_rtlsdr_dev</span><span class="p">,</span>
+    <span class="n">rtlsdr_read_async_cb_t</span><span class="p">,</span>
+    <span class="n">tuner_bandwidth_supported</span><span class="p">,</span>
+    <span class="n">tuner_set_bandwidth_supported</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>                <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">izip</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="n">izip</span> <span class="o">=</span> <span class="nb">zip</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">PY3</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="o">.</span><span class="n">major</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+<span class="k">if</span> <span class="n">PY3</span><span class="p">:</span>
+    <span class="n">basestring</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="c1"># see if NumPy is available</span>
+<span class="n">has_numpy</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">has_numpy</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="BaseRtlSdr"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr">[docs]</a><span class="k">class</span> <span class="nc">BaseRtlSdr</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Core interface for most API functionality</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        device_index (:obj:`int`, optional): The device index to use if there are</span>
+<span class="sd">            multiple dongles attached.  If only one is being used,</span>
+<span class="sd">            the default value (0) will be used.</span>
+<span class="sd">        test_mode_enabled (:obj:`bool`, optional): If True, enables a special</span>
+<span class="sd">            test mode, which will return the value of an internal RTL2832</span>
+<span class="sd">            8-bit counter with calls to :meth:`read_bytes`.</span>
+<span class="sd">        serial_number (:obj:`str`, optional): If not None, the device will be searched</span>
+<span class="sd">            for by the given serial_number by :meth:`get_device_index_by_serial`</span>
+<span class="sd">            and the ``device_index`` returned will be used automatically.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        DEFAULT_GAIN: Default :attr:`gain` value used on initialization: ``&#39;auto&#39;``</span>
+<span class="sd">        DEFAULT_FC (float): Default :attr:`center_freq` value used on</span>
+<span class="sd">            initialization: ``80e6`` (80 Mhz)</span>
+<span class="sd">        DEFAULT_RS (float): Default :attr:`sample_rate` value used on</span>
+<span class="sd">            initialization: ``1.024e6`` (1024 Msps)</span>
+<span class="sd">        DEFAULT_READ_SIZE (int): Default number of samples or bytes to read</span>
+<span class="sd">            if no arguments are supplied for :meth:`read_bytes`</span>
+<span class="sd">            or :meth:`read_samples`.  Default value is ``1024``</span>
+<span class="sd">        gain_values (list(int)): The valid gain parameters supported by the device</span>
+<span class="sd">            (in tenths of dB). These are stored as returned by ``librtlsdr``.</span>
+<span class="sd">        valid_gains_db (list(float)): The valid gains in dB</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># some default values for various parameters</span>
+    <span class="n">DEFAULT_GAIN</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span>
+    <span class="n">DEFAULT_FC</span> <span class="o">=</span> <span class="mf">80e6</span>
+    <span class="n">DEFAULT_RS</span> <span class="o">=</span> <span class="mf">1.024e6</span>
+    <span class="n">DEFAULT_READ_SIZE</span> <span class="o">=</span> <span class="mi">1024</span>
+
+    <span class="n">CRYSTAL_FREQ</span> <span class="o">=</span> <span class="mi">28800000</span>
+
+    <span class="n">gain_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">valid_gains_db</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">buffer</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">num_bytes_read</span> <span class="o">=</span> <span class="n">c_int32</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">device_opened</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="BaseRtlSdr.get_device_index_by_serial"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.get_device_index_by_serial">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_device_index_by_serial</span><span class="p">(</span><span class="n">serial</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves the device index for a device matching the given serial number</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            serial (str): The serial number to search for</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The device_index as reported by ``librtlsdr``</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            Most devices by default have the same serial number: `&#39;0000001&#39;`.</span>
+<span class="sd">            This can be set to a custom value by using the `rtl\_eeprom`_ utility</span>
+<span class="sd">            packaged with ``librtlsdr``.</span>
+
+<span class="sd">        .. _rtl\_eeprom: http://manpages.ubuntu.com/manpages/trusty/man1/rtl_eeprom.1.html</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">PY3</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">serial</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">serial</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">serial</span><span class="p">,</span> <span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_index_by_serial</span><span class="p">(</span><span class="n">serial</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when searching device by serial&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.get_device_serial_addresses"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.get_device_serial_addresses">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_device_serial_addresses</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;Get serial numbers for all attached devices</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list(str): A ``list`` of all detected serial numbers (``str``)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">get_serial</span><span class="p">(</span><span class="n">device_index</span><span class="p">):</span>
+            <span class="n">bfr</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_ubyte</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)()</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_device_usb_strings</span><span class="p">(</span><span class="n">device_index</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bfr</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
+                    <span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when reading USB strings (device </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">device_index</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">chr</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bfr</span> <span class="k">if</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+
+        <span class="n">num_devices</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_device_count</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">get_serial</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_devices</span><span class="p">)]</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serial_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">device_index</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="p">,</span> <span class="n">serial_number</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseRtlSdr.open"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serial_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Connect to the device through the underlying wrapper library</span>
+
+<span class="sd">        Initializes communication with the device and retrieves information</span>
+<span class="sd">        from it with a call to :meth:`init_device_values`.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            device_index (:obj:`int`, optional): The device index to use if there are</span>
+<span class="sd">                multiple dongles attached.  If only one is being used,</span>
+<span class="sd">                the default value (0) will be used.</span>
+<span class="sd">            test_mode_enabled (:obj:`bool`, optional): If True, enables a special</span>
+<span class="sd">                test mode, which will return the value of an internal RTL2832</span>
+<span class="sd">                8-bit counter with calls to :meth:`read_bytes`.</span>
+<span class="sd">            serial_number (:obj:`str`, optional): If not None, the device will be searched</span>
+<span class="sd">                for by the given serial_number by :meth:`get_device_index_by_serial`</span>
+<span class="sd">                and the ``device_index`` returned will be used automatically.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            The arguments used here are passed directly from object</span>
+<span class="sd">            initialization.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            IOError: If communication with the device could not be established.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">serial_number</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">device_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_device_index_by_serial</span><span class="p">(</span><span class="n">serial_number</span><span class="p">)</span>
+
+        <span class="c1"># this is the pointer to the device structure used by all librtlsdr</span>
+        <span class="c1"># functions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span> <span class="o">=</span> <span class="n">p_rtlsdr_dev</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># initialize device</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">device_index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when opening SDR (device index = </span><span class="si">%d</span><span class="s1">)&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">device_index</span><span class="p">))</span>
+
+        <span class="c1"># enable test mode if necessary</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_testmode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">test_mode_enabled</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting test mode&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="c1"># reset buffers</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_reset_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when resetting buffer (device index = </span><span class="si">%d</span><span class="s1">)&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">device_index</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device_opened</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_device_values</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.init_device_values"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.init_device_values">[docs]</a>    <span class="k">def</span> <span class="nf">init_device_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves information from the device</span>
+
+<span class="sd">        This method acquires the values for :attr:`gain_values`. Also sets the</span>
+<span class="sd">        device to the default :attr:`center frequency &lt;DEFAULT_FC&gt;`, the</span>
+<span class="sd">        :attr:`sample rate &lt;DEFAULT_RS&gt;` and :attr:`gain &lt;DEFAULT_GAIN&gt;`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gain_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_gains</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valid_gains_db</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span><span class="o">/</span><span class="mi">10</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_values</span><span class="p">]</span>
+
+        <span class="c1"># set default state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_RS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_FC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_gain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_GAIN</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_opened</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device_opened</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">set_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
+
+        <span class="n">freq</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">freq</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting center freq. to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">freq</span><span class="p">))</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">get_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when getting center freq.&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="c1"># FIXME: the E4000 rounds to kHz, this may not be true for other tuners</span>
+        <span class="n">reported_center_freq</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="n">center_freq</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">reported_center_freq</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">center_freq</span>
+
+    <span class="k">def</span> <span class="nf">set_freq_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">err_ppm</span><span class="p">):</span>
+
+        <span class="n">freq</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">err_ppm</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_freq_correction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">err_ppm</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting freq. offset to </span><span class="si">%d</span><span class="s1"> ppm&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">err_ppm</span><span class="p">))</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">get_freq_correction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_freq_correction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when getting freq. offset in ppm.&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">set_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rate</span><span class="p">):</span>
+
+        <span class="n">rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting sample rate to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">rate</span><span class="p">))</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">get_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when getting sample rate&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="c1"># figure out actual sample rate, taken directly from librtlsdr</span>
+        <span class="n">reported_sample_rate</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="n">rsamp_ratio</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CRYSTAL_FREQ</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span> <span class="o">//</span> <span class="n">reported_sample_rate</span>
+        <span class="n">rsamp_ratio</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="mi">3</span>
+        <span class="n">real_rate</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CRYSTAL_FREQ</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">22</span><span class="p">))</span> <span class="o">/</span> <span class="n">rsamp_ratio</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="n">real_rate</span>
+
+    <span class="k">def</span> <span class="nf">set_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bw</span><span class="p">):</span>
+
+        <span class="n">bw</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tuner_bandwidth_supported</span><span class="p">:</span>
+            <span class="n">apply_bw</span> <span class="o">=</span> <span class="n">c_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">applied_bw</span> <span class="o">=</span> <span class="n">c_uint32</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+            <span class="n">bw</span> <span class="o">=</span> <span class="n">c_uint32</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_and_get_tuner_bandwidth</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">bw</span><span class="p">,</span> <span class="n">byref</span><span class="p">(</span><span class="n">applied_bw</span><span class="p">),</span> <span class="n">apply_bw</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bandwidth</span> <span class="o">=</span> <span class="n">applied_bw</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">elif</span> <span class="n">tuner_set_bandwidth_supported</span><span class="p">:</span>
+            <span class="n">bw</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_tuner_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">bw</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bandwidth</span> <span class="o">=</span> <span class="n">bw</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;set_tuner_bandwidth not supported in this version of librtlsdr&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting tuner bandwidth to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bw</span><span class="p">))</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">get_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_bandwidth&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gain</span><span class="p">,</span> <span class="n">basestring</span><span class="p">)</span> <span class="ow">and</span> <span class="n">gain</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+            <span class="c1"># disable manual gain -&gt; enable AGC</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_manual_gain_enabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">return</span>
+
+        <span class="c1"># find supported gain nearest to one requested</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="n">gain</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain_values</span><span class="p">]</span>
+        <span class="n">nearest_gain_ind</span> <span class="o">=</span> <span class="n">errors</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">errors</span><span class="p">))</span>
+
+        <span class="c1"># disable AGC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_manual_gain_enabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_tuner_gain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">gain_values</span><span class="p">[</span><span class="n">nearest_gain_ind</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting gain to </span><span class="si">%d</span><span class="s1">&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">gain</span><span class="p">))</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">get_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_tuner_gain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error when getting gain&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span><span class="o">/</span><span class="mi">10</span>
+
+<div class="viewcode-block" id="BaseRtlSdr.get_gains"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.get_gains">[docs]</a>    <span class="k">def</span> <span class="nf">get_gains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all supported gain values from driver</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list(int): Gains in tenths of a dB</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">buffer</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_int</span> <span class="o">*</span><span class="mi">50</span><span class="p">)()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_tuner_gains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error when getting gains&#39;</span><span class="p">)</span>
+
+        <span class="n">gains</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+            <span class="n">gains</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">gains</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.set_manual_gain_enabled"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.set_manual_gain_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">set_manual_gain_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Enable or disable manual gain control of tuner.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            enabled (bool):</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            If ``enabled`` is False, then AGC should also be used by calling</span>
+<span class="sd">            :meth:`set_agc_mode`. It is recommended to use :meth:`set_gain`</span>
+<span class="sd">            instead of calling this method directly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_tuner_gain_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">enabled</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting gain mode&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.set_agc_mode"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.set_agc_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_agc_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Enable RTL2832 AGC</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            enabled (bool):</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_agc_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">enabled</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting AGC mode&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.set_direct_sampling"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.set_direct_sampling">[docs]</a>    <span class="k">def</span> <span class="nf">set_direct_sampling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Enable direct sampling.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            direct: If False or 0, disable direct sampling.  If &#39;i&#39; or 1,</span>
+<span class="sd">                use ADC I input.  If &#39;q&#39; or 2, use ADC Q input.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># convert parameter</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">direct</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">direct</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;i&#39;</span><span class="p">:</span>
+                <span class="n">direct</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">direct</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;q&#39;</span><span class="p">:</span>
+                <span class="n">direct</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="s1">&#39;invalid value &quot;</span><span class="si">%s</span><span class="s1">&quot;&#39;</span> <span class="o">%</span> <span class="n">direct</span><span class="p">)</span>
+
+        <span class="c1"># make sure False works as an option</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">direct</span><span class="p">:</span>
+            <span class="n">direct</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_direct_sampling</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">direct</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting AGC mode&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.get_tuner_type"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.get_tuner_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_tuner_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the tuner type.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int:</span>
+<span class="sd">                The tuner type as reported by the driver.</span>
+<span class="sd">                See the `tuner enum definition`_ for more information.</span>
+
+<span class="sd">        .. _tuner enum definition: https://github.com/librtlsdr/librtlsdr/blob/c7d970ac5b70e897501909a48b2b32d4bfb16979/include/rtl-sdr.h#L185-L201</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_tuner_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when getting tuner type&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.read_bytes"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.read_bytes">[docs]</a>    <span class="k">def</span> <span class="nf">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_bytes</span><span class="o">=</span><span class="n">DEFAULT_READ_SIZE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read specified number of bytes from tuner.</span>
+
+<span class="sd">        Does not attempt to unpack complex samples (see :meth:`read_samples`),</span>
+<span class="sd">        and data may be unsafe as buffer is reused.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            num_bytes (:obj:`int`, optional): The number of bytes to read.</span>
+<span class="sd">                Defaults to :attr:`DEFAULT_READ_SIZE`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ctypes.Array[c_ubyte]:</span>
+<span class="sd">                A buffer of len(num_bytes) containing the raw samples read.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># FIXME: libsdrrtl may not be able to read an arbitrary number of bytes</span>
+
+        <span class="n">num_bytes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">)</span>
+
+        <span class="c1"># create buffer, as necessary</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_bytes</span><span class="p">:</span>
+            <span class="n">array_type</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_ubyte</span><span class="o">*</span><span class="n">num_bytes</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">array_type</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_read_sync</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span>\
+                                            <span class="n">byref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bytes_read</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when reading </span><span class="si">%d</span><span class="s1"> bytes&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bytes_read</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">num_bytes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Short read, requested </span><span class="si">%d</span><span class="s1"> bytes, received </span><span class="si">%d</span><span class="s1">&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bytes_read</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.read_samples"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.read_samples">[docs]</a>    <span class="k">def</span> <span class="nf">read_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="n">DEFAULT_READ_SIZE</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read specified number of complex samples from tuner.</span>
+
+<span class="sd">        Real and imaginary parts are normalized to be in the range [-1, 1].</span>
+<span class="sd">        Data is safe after this call (will not get overwritten by another one).</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            num_samples (:obj:`int`, optional): Number of samples to read.</span>
+<span class="sd">                Defaults to :attr:`DEFAULT_READ_SIZE`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The samples read as either a :class:`list` or :class:`numpy.ndarray`</span>
+<span class="sd">            (if available).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_bytes</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">num_samples</span>
+
+        <span class="n">raw_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">)</span>
+        <span class="n">iq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_bytes_to_iq</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">iq</span></div>
+
+<div class="viewcode-block" id="BaseRtlSdr.packed_bytes_to_iq"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.packed_bytes_to_iq">[docs]</a>    <span class="k">def</span> <span class="nf">packed_bytes_to_iq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unpack a sequence of bytes to a sequence of normalized complex numbers</span>
+
+<span class="sd">        This is called automatically by :meth:`read_samples`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The unpacked iq values as either a :class:`list` or</span>
+<span class="sd">            :class:`numpy.ndarray` (if available).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">has_numpy</span><span class="p">:</span>
+            <span class="c1"># use NumPy array</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ctypeslib</span><span class="o">.</span><span class="n">as_array</span><span class="p">(</span><span class="nb">bytes</span><span class="p">)</span>
+            <span class="n">iq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+            <span class="n">iq</span> <span class="o">/=</span> <span class="mf">127.5</span>
+            <span class="n">iq</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># use normal list</span>
+            <span class="n">iq</span> <span class="o">=</span> <span class="p">[</span><span class="nb">complex</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="p">(</span><span class="mi">255</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">q</span><span class="o">/</span><span class="p">(</span><span class="mi">255</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="nb">bytes</span><span class="p">[::</span><span class="mi">2</span><span class="p">],</span> <span class="nb">bytes</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">])]</span>
+
+        <span class="k">return</span> <span class="n">iq</span></div>
+
+    <span class="n">center_freq</span> <span class="o">=</span> <span class="n">fc</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_center_freq</span><span class="p">,</span> <span class="n">set_center_freq</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;int: Get/Set the center frequency of the device (in Hz)&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">rs</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_sample_rate</span><span class="p">,</span> <span class="n">set_sample_rate</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;int: Get/Set the sample rate of the tuner (in Hz)&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">gain</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_gain</span><span class="p">,</span> <span class="n">set_gain</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;float or str: Get/Set gain of the tuner (in dB)</span>
+
+<span class="s2">        Notes:</span>
+<span class="s2">            If set to &#39;auto&#39;, AGC mode is enabled; otherwise gain is in dB.</span>
+<span class="s2">            The actual gain used is rounded to the nearest value supported by</span>
+<span class="s2">            the device (see the values in :attr:`valid_gains_db`).</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">freq_correction</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_freq_correction</span><span class="p">,</span> <span class="n">set_freq_correction</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;int: Get/Set frequency offset of the tuner (in PPM)&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">bandwidth</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_bandwidth</span><span class="p">,</span> <span class="n">set_bandwidth</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;int: Get/Set bandwidth value (in Hz)</span>
+
+<span class="s2">        Set value to 0 (default) for automatic bandwidth selection.</span>
+
+<span class="s2">        Notes:</span>
+<span class="s2">            This value is stored locally and may not reflect the real tuner bandwidth</span>
+
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># This adds async read support to base class BaseRtlSdr (don&#39;t use that one)</span>
+<div class="viewcode-block" id="RtlSdr"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.RtlSdr">[docs]</a><span class="k">class</span> <span class="nc">RtlSdr</span><span class="p">(</span><span class="n">BaseRtlSdr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This adds async read support to :class:`BaseRtlSdr`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DEFAULT_ASYNC_BUF_NUMBER</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># librtlsdr will use the default (15)</span>
+    <span class="n">DEFAULT_READ_SIZE</span> <span class="o">=</span> <span class="mi">1024</span>
+
+    <span class="n">read_async_canceling</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="RtlSdr.read_bytes_async"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.RtlSdr.read_bytes_async">[docs]</a>    <span class="k">def</span> <span class="nf">read_bytes_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">num_bytes</span><span class="o">=</span><span class="n">DEFAULT_READ_SIZE</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Continuously read bytes from tuner</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            callback: A function or method that will be called with the result.</span>
+<span class="sd">                See :meth:`_bytes_converter_callback` for the signature.</span>
+<span class="sd">            num_bytes (int): Number of bytes to read for each callback.</span>
+<span class="sd">                Defaults to :attr:`DEFAULT_READ_SIZE`.</span>
+<span class="sd">            context (Optional): Object to be passed as an argument to the callback.</span>
+<span class="sd">                If not supplied or None, the :class:`RtlSdr` instance</span>
+<span class="sd">                will be used.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            As with :meth:`~BaseRtlSdr.read_bytes`, the data passed to the</span>
+<span class="sd">            callback may by overwritten.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_bytes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_bytes</span><span class="p">)</span>
+
+        <span class="c1"># we don&#39;t call the provided callback directly, but add a layer inbetween</span>
+        <span class="c1"># to convert the raw buffer to a safer type</span>
+
+        <span class="c1"># save requested callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_bytes</span> <span class="o">=</span> <span class="n">callback</span>
+
+        <span class="c1"># convert Python callback function to a librtlsdr callback</span>
+        <span class="n">rtlsdr_callback</span> <span class="o">=</span> <span class="n">rtlsdr_read_async_cb_t</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bytes_converter_callback</span><span class="p">)</span>
+
+        <span class="c1"># use this object as context if none provided</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">context</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_async_canceling</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_read_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">rtlsdr_callback</span><span class="p">,</span>\
+                    <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_ASYNC_BUF_NUMBER</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when requesting </span><span class="si">%d</span><span class="s1"> bytes&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_async_canceling</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="RtlSdr._bytes_converter_callback"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.RtlSdr._bytes_converter_callback">[docs]</a>    <span class="k">def</span> <span class="nf">_bytes_converter_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_buffer</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts the raw buffer used in ``rtlsdr_read_async`` to a usable type</span>
+
+<span class="sd">        This method is used internally by :meth:`read_bytes_async` to convert</span>
+<span class="sd">        the raw data from ``rtlsdr_read_async`` into a memory-safe array.</span>
+
+<span class="sd">        The callback given in :meth:`read_bytes_async` will then be called</span>
+<span class="sd">        with the signature::</span>
+
+<span class="sd">            callback(values, context)</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            raw_buffer: Buffer of type ``unsigned char``</span>
+<span class="sd">            num_bytes (int): Length of ``raw_buffer``</span>
+<span class="sd">            context: User-defined value passed to ``rtlsdr_read_async``.</span>
+<span class="sd">                In most cases, will be a reference to the :class:`RtlSdr` instance</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            This method is not meant to be called directly or</span>
+<span class="sd">            overridden by subclasses.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">array_type</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_ubyte</span><span class="o">*</span><span class="n">num_bytes</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">raw_buffer</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">array_type</span><span class="p">))</span><span class="o">.</span><span class="n">contents</span>
+
+        <span class="c1"># skip callback if cancel_read_async() called</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_async_canceling</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_bytes</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdr.read_samples_async"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.RtlSdr.read_samples_async">[docs]</a>    <span class="k">def</span> <span class="nf">read_samples_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="n">DEFAULT_READ_SIZE</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Continuously read &#39;samples&#39; from the tuner</span>
+
+<span class="sd">        This is a combination of :meth:`read_samples` and :meth:`read_bytes_async`</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            callback: A function or method that will be called with the result.</span>
+<span class="sd">                See :meth:`_samples_converter_callback` for the signature.</span>
+<span class="sd">            num_samples (int): The number of samples read into each callback.</span>
+<span class="sd">                Defaults to :attr:`DEFAULT_READ_SIZE`.</span>
+<span class="sd">            context (Optional): Object to be passed as an argument to the callback.</span>
+<span class="sd">                If not supplied or None, the :class:`RtlSdr` instance</span>
+<span class="sd">                will be used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">num_bytes</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">num_samples</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_samples</span> <span class="o">=</span> <span class="n">callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_bytes_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_samples_converter_callback</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="RtlSdr._samples_converter_callback"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.RtlSdr._samples_converter_callback">[docs]</a>    <span class="k">def</span> <span class="nf">_samples_converter_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts the raw buffer used in ``rtlsdr_read_async`` to a usable type</span>
+
+<span class="sd">        This method is used internally by :meth:`read_samples_async` to convert</span>
+<span class="sd">        the data into a sequence of complex numbers.</span>
+
+<span class="sd">        The callback given in :meth:`read_samples_async` will then be called</span>
+<span class="sd">        with the signature::</span>
+
+<span class="sd">            callback(samples, context)</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">            buffer: Buffer of type ``unsigned char``</span>
+<span class="sd">            context: User-defined value passed to ``rtlsdr_read_async``.</span>
+<span class="sd">                In most cases, will be a reference to the :class:`RtlSdr` instance</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            This method is not meant to be called directly or</span>
+<span class="sd">            overridden by subclasses.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">iq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">packed_bytes_to_iq</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback_samples</span><span class="p">(</span><span class="n">iq</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RtlSdr.cancel_read_async"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.RtlSdr.cancel_read_async">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_read_async</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cancel async read.</span>
+<span class="sd">        This should be called eventually when using async reads</span>
+<span class="sd">        (:meth:`read_bytes_async` or :meth:`read_samples_async`),</span>
+<span class="sd">        or callbacks will never stop.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :func:`~rtlsdr.helpers.limit_time` and</span>
+<span class="sd">            :func:`~rtlsdr.helpers.limit_calls`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_cancel_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
+        <span class="c1"># sometimes we get additional callbacks after canceling an async read,</span>
+        <span class="c1"># in this case we don&#39;t raise exceptions</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_async_canceling</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when canceling async read&#39;</span>\
+                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_async_canceling</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Roger &lt;https://github.com/roger-/pyrtlsdr&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

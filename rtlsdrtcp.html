@@ -1,0 +1,853 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>rtlsdr.rtlsdrtcp package &mdash; pyrtlsdr 0.2.91 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="helpers module" href="helpers.html" />
+    <link rel="prev" title="rtlsdraio module" href="rtlsdraio.html" />
+ 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-26848999-11');
+</script>
+
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pyrtlsdr
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.91
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Overview.html">Overview</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Reference.html">Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="rtlsdr.html">rtlsdr module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtlsdraio.html">rtlsdraio module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">rtlsdr.rtlsdrtcp package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-rtlsdr.rtlsdrtcp.server">rtlsdr.rtlsdrtcp.server module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-rtlsdr.rtlsdrtcp.client">rtlsdr.rtlsdrtcp.client module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-rtlsdr.rtlsdrtcp.base">rtlsdr.rtlsdrtcp.base module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html">helpers module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyrtlsdr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="Reference.html">Reference</a> &raquo;</li>
+        
+      <li>rtlsdr.rtlsdrtcp package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/rtlsdrtcp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-rtlsdr.rtlsdrtcp">
+<span id="rtlsdr-rtlsdrtcp-package"></span><h1>rtlsdr.rtlsdrtcp package<a class="headerlink" href="#module-rtlsdr.rtlsdrtcp" title="Permalink to this headline">¶</a></h1>
+<p>This module allows client/server communication.</p>
+<p>The <a class="reference internal" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer" title="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdrTcpServer</span></code></a> class is meant to be
+connected physically to an SDR dongle and communicate with an instance of
+<a class="reference internal" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient" title="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdrTcpClient</span></code></a>.</p>
+<p>The client is intended to function as closely as possible to the base
+<a class="reference internal" href="rtlsdr.html#rtlsdr.rtlsdr.RtlSdr" title="rtlsdr.rtlsdr.RtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdr</span></code></a> class (as if it had a physical dongle
+attatched to it).</p>
+<p>Both of these classes have the same arguments as the base
+<a class="reference internal" href="rtlsdr.html#rtlsdr.rtlsdr.RtlSdr" title="rtlsdr.rtlsdr.RtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdr</span></code></a> class with the addition of <code class="docutils literal notranslate"><span class="pre">hostname</span></code> and <code class="docutils literal notranslate"><span class="pre">port</span></code>.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="o">=</span> <span class="n">RtlSdrTcpServer</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
+<span class="c1"># Will listen for clients until Ctrl-C is pressed</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># On another machine (typically)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">RtlSdrTcpClient</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">center_freq</span> <span class="o">=</span> <span class="mf">2e6</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">read_samples</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">On platforms where the <code class="docutils literal notranslate"><span class="pre">librtlsdr</span></code> library cannot be installed/compiled,
+it is possible to import <code class="xref py py-class docutils literal notranslate"><span class="pre">RtlSdrTcpClient</span></code> only by
+setting the environment variable <code class="docutils literal notranslate"><span class="pre">&quot;RTLSDR_CLIENT_MODE&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;true&quot;</span></code>.
+If this is set, no other modules will be available.</p>
+</div>
+<p><em>Feature added in v0.2.4</em></p>
+<div class="section" id="module-rtlsdr.rtlsdrtcp.server">
+<span id="rtlsdr-rtlsdrtcp-server-module"></span><h2>rtlsdr.rtlsdrtcp.server module<a class="headerlink" href="#module-rtlsdr.rtlsdrtcp.server" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.server.RequestHandler">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.server.</code><code class="descname">RequestHandler</code><span class="sig-paren">(</span><em>request</em>, <em>client_address</em>, <em>server</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RequestHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RequestHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/socketserver.html#socketserver.BaseRequestHandler" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">socketserver.BaseRequestHandler</span></code></a></p>
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RequestHandler.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RequestHandler.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RequestHandler.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RequestHandler.finish">
+<code class="descname">finish</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RequestHandler.finish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RequestHandler.finish" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RequestHandler.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>rx_message=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RequestHandler.handle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RequestHandler.handle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RequestHandler.handle_method_call">
+<code class="descname">handle_method_call</code><span class="sig-paren">(</span><em>rx_message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RequestHandler.handle_method_call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RequestHandler.handle_method_call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RequestHandler.handle_prop_get">
+<code class="descname">handle_prop_get</code><span class="sig-paren">(</span><em>rx_message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RequestHandler.handle_prop_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RequestHandler.handle_prop_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RequestHandler.handle_prop_set">
+<code class="descname">handle_prop_set</code><span class="sig-paren">(</span><em>rx_message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RequestHandler.handle_prop_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RequestHandler.handle_prop_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RequestHandler.setup">
+<code class="descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RequestHandler.setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RequestHandler.setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.server.</code><code class="descname">RtlSdrTcpServer</code><span class="sig-paren">(</span><em>device_index=0</em>, <em>test_mode_enabled=False</em>, <em>serial_number=None</em>, <em>hostname='127.0.0.1'</em>, <em>port=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RtlSdrTcpServer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rtlsdr.html#rtlsdr.rtlsdr.RtlSdr" title="rtlsdr.rtlsdr.RtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdr.RtlSdr</span></code></a>, <a class="reference internal" href="#rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase" title="rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase</span></code></a></p>
+<p>Server that connects to a physical dongle to allow client connections.</p>
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RtlSdrTcpServer.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the server (if it’s running) and closes the connection to the
+dongle.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>device_index=0</em>, <em>test_mode_enabled=False</em>, <em>serial_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RtlSdrTcpServer.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to the device through the underlying wrapper library</p>
+<p>Initializes communication with the device and retrieves information
+from it with a call to <code class="xref py py-meth docutils literal notranslate"><span class="pre">init_device_values()</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device_index</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – The device index to use if there are
+multiple dongles attached.  If only one is being used,
+the default value (0) will be used.</li>
+<li><strong>test_mode_enabled</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – If True, enables a special
+test mode, which will return the value of an internal RTL2832
+8-bit counter with calls to <a class="reference internal" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.read_bytes" title="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.read_bytes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">read_bytes()</span></code></a>.</li>
+<li><strong>serial_number</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – If not None, the device will be searched
+for by the given serial_number by <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_device_index_by_serial()</span></code>
+and the <code class="docutils literal notranslate"><span class="pre">device_index</span></code> returned will be used automatically.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The arguments used here are passed directly from object
+initialization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/exceptions.html#IOError" title="(in Python v3.5)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">IOError</span></code></a> – If communication with the device could not be established.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.read_bytes">
+<code class="descname">read_bytes</code><span class="sig-paren">(</span><em>num_bytes=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RtlSdrTcpServer.read_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.read_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a packed string of bytes read along with the struct_fmt.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.read_samples">
+<code class="descname">read_samples</code><span class="sig-paren">(</span><em>num_samples=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RtlSdrTcpServer.read_samples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.read_samples" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overrides the base implementation so that the raw data is sent.
+It will be unpacked to I/Q samples on the client side.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RtlSdrTcpServer.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the server thread and returns.  Use this only if you are
+running mainline code afterwards.
+The server must explicitly be stopped by the stop method before exit.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.run_forever">
+<code class="descname">run_forever</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#RtlSdrTcpServer.run_forever"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.RtlSdrTcpServer.run_forever" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the server and begins a mainloop.
+The loop will exit with Ctrl-C.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.server.Server">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.server.</code><code class="descname">Server</code><span class="sig-paren">(</span><em>rtl_sdr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#Server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.Server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/socketserver.html#socketserver.TCPServer" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">socketserver.TCPServer</span></code></a></p>
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.Server.server_close">
+<code class="descname">server_close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#Server.server_close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.Server.server_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called to clean-up the server.</p>
+<p>May be overridden.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.server.Server.REQUEST_RECV_SIZE">
+<code class="descname">REQUEST_RECV_SIZE</code><em class="property"> = 1024</em><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.Server.REQUEST_RECV_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.server.ServerThread">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.server.</code><code class="descname">ServerThread</code><span class="sig-paren">(</span><em>rtl_sdr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#ServerThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.ServerThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/threading.html#threading.Thread" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Thread</span></code></a></p>
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.ServerThread.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#ServerThread.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.ServerThread.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method representing the thread’s activity.</p>
+<p>You may override this method in a subclass. The standard run() method
+invokes the callable object passed to the object’s constructor as the
+target argument, if any, with sequential and keyword arguments taken
+from the args and kwargs arguments, respectively.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.server.ServerThread.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#ServerThread.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.ServerThread.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="rtlsdr.rtlsdrtcp.server.run_server">
+<code class="descclassname">rtlsdr.rtlsdrtcp.server.</code><code class="descname">run_server</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/server.html#run_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.server.run_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to run the server from the command line
+with options for hostname, port and device index.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-rtlsdr.rtlsdrtcp.client">
+<span id="rtlsdr-rtlsdrtcp-client-module"></span><h2>rtlsdr.rtlsdrtcp.client module<a class="headerlink" href="#module-rtlsdr.rtlsdrtcp.client" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.client.</code><code class="descname">RtlSdrTcpClient</code><span class="sig-paren">(</span><em>device_index=0</em>, <em>test_mode_enabled=False</em>, <em>hostname='127.0.0.1'</em>, <em>port=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase" title="rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase</span></code></a></p>
+<p>Client object that connects to a remote server.</p>
+<p>Exposes most of the methods and descriptors that are available in the
+RtlSdr class in a transparent manner allowing an interface that is nearly
+identical to the core API.</p>
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_bandwidth">
+<code class="descname">get_bandwidth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.get_bandwidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_center_freq">
+<code class="descname">get_center_freq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.get_center_freq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_center_freq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_freq_correction">
+<code class="descname">get_freq_correction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.get_freq_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_freq_correction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_gain">
+<code class="descname">get_gain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.get_gain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_gain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_gains">
+<code class="descname">get_gains</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.get_gains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_gains" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_sample_rate">
+<code class="descname">get_sample_rate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.get_sample_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_tuner_type">
+<code class="descname">get_tuner_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.get_tuner_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.get_tuner_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.open">
+<code class="descname">open</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_bytes">
+<code class="descname">read_bytes</code><span class="sig-paren">(</span><em>num_bytes=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.read_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_bytes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_bytes_async">
+<code class="descname">read_bytes_async</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.read_bytes_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_bytes_async" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_samples">
+<code class="descname">read_samples</code><span class="sig-paren">(</span><em>num_samples=1024</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.read_samples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_samples" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_samples_async">
+<code class="descname">read_samples_async</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.read_samples_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.read_samples_async" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_bandwidth">
+<code class="descname">set_bandwidth</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.set_bandwidth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_center_freq">
+<code class="descname">set_center_freq</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.set_center_freq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_center_freq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_direct_sampling">
+<code class="descname">set_direct_sampling</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.set_direct_sampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_direct_sampling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_freq_correction">
+<code class="descname">set_freq_correction</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.set_freq_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_freq_correction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_gain">
+<code class="descname">set_gain</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.set_gain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_gain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_sample_rate">
+<code class="descname">set_sample_rate</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/client.html#RtlSdrTcpClient.set_sample_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.set_sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.bandwidth">
+<code class="descname">bandwidth</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.center_freq">
+<code class="descname">center_freq</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.center_freq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.fc">
+<code class="descname">fc</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.fc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.freq_correction">
+<code class="descname">freq_correction</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.freq_correction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.gain">
+<code class="descname">gain</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.gain" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.rs">
+<code class="descname">rs</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.rs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.sample_rate">
+<code class="descname">sample_rate</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.client.RtlSdrTcpClient.sample_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-rtlsdr.rtlsdrtcp.base">
+<span id="rtlsdr-rtlsdrtcp-base-module"></span><h2>rtlsdr.rtlsdrtcp.base module<a class="headerlink" href="#module-rtlsdr.rtlsdrtcp.base" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="rtlsdr.rtlsdrtcp.base.CommunicationError">
+<em class="property">exception </em><code class="descclassname">rtlsdr.rtlsdrtcp.base.</code><code class="descname">CommunicationError</code><span class="sig-paren">(</span><em>msg</em>, <em>source_exc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#CommunicationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.CommunicationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/exceptions.html#Exception" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.base.AckMessage">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.base.</code><code class="descname">AckMessage</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#AckMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.AckMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rtlsdr.rtlsdrtcp.base.MessageBase" title="rtlsdr.rtlsdrtcp.base.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdrtcp.base.MessageBase</span></code></a></p>
+<p>Simple message type meant for ACKnolegemnt of message receipt</p>
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.AckMessage.get_header">
+<code class="descname">get_header</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#AckMessage.get_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.AckMessage.get_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the header data for the message</p>
+<p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">timestamp</span></code> is added to the header if not already present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.base.ClientMessage">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.base.</code><code class="descname">ClientMessage</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ClientMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ClientMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rtlsdr.rtlsdrtcp.base.MessageBase" title="rtlsdr.rtlsdrtcp.base.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdrtcp.base.MessageBase</span></code></a></p>
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.ClientMessage.get_header">
+<code class="descname">get_header</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ClientMessage.get_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ClientMessage.get_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the header data for the message</p>
+<p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">timestamp</span></code> is added to the header if not already present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.ClientMessage.get_response_class">
+<code class="descname">get_response_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ClientMessage.get_response_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ClientMessage.get_response_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.ClientMessage.send_message">
+<code class="descname">send_message</code><span class="sig-paren">(</span><em>sock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ClientMessage.send_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ClientMessage.send_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serializes and sends the message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sock</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">socket</span></code> object to write to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.base.</code><code class="descname">MessageBase</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#MessageBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for messages sent between clients and servers.</p>
+<p>Hanldes serialization/deserialization and communication with
+socket type objects.</p>
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.timestamp">
+<code class="descname">timestamp</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Timestamp given from <a class="reference external" href="https://docs.python.org/3.5/library/time.html#time.time" title="(in Python v3.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">time.time()</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/functions.html#float" title="(in Python v3.5)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.header">
+<code class="descname">header</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.header" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">dict</span></code> containing message type and payload information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.data">
+<code class="descname">data</code><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>The payload containing either the request or response data</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.from_remote">
+<em class="property">classmethod </em><code class="descname">from_remote</code><span class="sig-paren">(</span><em>sock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#MessageBase.from_remote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.from_remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data from the socket and parses an instance of <a class="reference internal" href="#rtlsdr.rtlsdrtcp.base.MessageBase" title="rtlsdr.rtlsdrtcp.base.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sock</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">socket</span></code> object to read from</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.get_ack_response">
+<code class="descname">get_ack_response</code><span class="sig-paren">(</span><em>sock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#MessageBase.get_ack_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.get_ack_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#MessageBase.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.get_header">
+<code class="descname">get_header</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#MessageBase.get_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.get_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the header data for the message</p>
+<p>The <a class="reference internal" href="#rtlsdr.rtlsdrtcp.base.MessageBase.timestamp" title="rtlsdr.rtlsdrtcp.base.MessageBase.timestamp"><code class="xref py py-attr docutils literal notranslate"><span class="pre">timestamp</span></code></a> is added to the header if not already present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.get_response">
+<code class="descname">get_response</code><span class="sig-paren">(</span><em>sock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#MessageBase.get_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.get_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits for a specific response message</p>
+<p>The message class returned from <code class="xref py py-meth docutils literal notranslate"><span class="pre">get_response_class()</span></code> is used
+to parse the message (called from <a class="reference internal" href="#rtlsdr.rtlsdrtcp.base.MessageBase.from_remote" title="rtlsdr.rtlsdrtcp.base.MessageBase.from_remote"><code class="xref py py-meth docutils literal notranslate"><span class="pre">from_remote()</span></code></a>)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sock</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">socket</span></code> object to read from</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.MessageBase.send_message">
+<code class="descname">send_message</code><span class="sig-paren">(</span><em>sock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#MessageBase.send_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.MessageBase.send_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serializes and sends the message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sock</strong> – The <code class="xref py py-class docutils literal notranslate"><span class="pre">socket</span></code> object to write to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.base.</code><code class="descname">RtlSdrTcpBase</code><span class="sig-paren">(</span><em>device_index=0</em>, <em>test_mode_enabled=False</em>, <em>hostname='127.0.0.1'</em>, <em>port=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#RtlSdrTcpBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for all <code class="docutils literal notranslate"><span class="pre">rtlsdrtcp</span></code> functionality</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>device_index</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – </li>
+<li><strong>test_mode_enabled</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#bool" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code></a>, optional) – </li>
+<li><strong>hostname</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – </li>
+<li><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase.packed_bytes_to_iq">
+<code class="descname">packed_bytes_to_iq</code><span class="sig-paren">(</span><em>bytes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#RtlSdrTcpBase.packed_bytes_to_iq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase.packed_bytes_to_iq" title="Permalink to this definition">¶</a></dt>
+<dd><p>A direct copy of <code class="xref py py-meth docutils literal notranslate"><span class="pre">rtlsdr.BaseRtlSdr.packed_bytes_to_iq()</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase.DEFAULT_PORT">
+<code class="descname">DEFAULT_PORT</code><em class="property"> = 1235</em><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.RtlSdrTcpBase.DEFAULT_PORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="rtlsdr.rtlsdrtcp.base.ServerMessage">
+<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdrtcp.base.</code><code class="descname">ServerMessage</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ServerMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ServerMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rtlsdr.rtlsdrtcp.base.MessageBase" title="rtlsdr.rtlsdrtcp.base.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdrtcp.base.MessageBase</span></code></a></p>
+<dl class="classmethod">
+<dt id="rtlsdr.rtlsdrtcp.base.ServerMessage.from_remote">
+<em class="property">classmethod </em><code class="descname">from_remote</code><span class="sig-paren">(</span><em>sock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ServerMessage.from_remote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ServerMessage.from_remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data for the socket buffer and reconstructs the appropriate
+message that was sent by the other end.</p>
+<p>This method is used by clients to reconstruct ServerMessage objects
+and if necessary, use multiple read calls to get the entire message
+(if the message size is greater than the buffer length)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.ServerMessage.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ServerMessage.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ServerMessage.get_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.ServerMessage.get_header">
+<code class="descname">get_header</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ServerMessage.get_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ServerMessage.get_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the header data for the message</p>
+<p>The <code class="xref py py-attr docutils literal notranslate"><span class="pre">timestamp</span></code> is added to the header if not already present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#dict" title="(in Python v3.5)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.ServerMessage.get_response_class">
+<code class="descname">get_response_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ServerMessage.get_response_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ServerMessage.get_response_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="rtlsdr.rtlsdrtcp.base.ServerMessage.send_message">
+<code class="descname">send_message</code><span class="sig-paren">(</span><em>sock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdrtcp/base.html#ServerMessage.send_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdrtcp.base.ServerMessage.send_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the message data to clients.</p>
+<p>If necessary, uses multiple calls to send to ensure all data has
+actually been sent through the socket objects’s buffer.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="helpers.html" class="btn btn-neutral float-right" title="helpers module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="rtlsdraio.html" class="btn btn-neutral" title="rtlsdraio module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, Roger &lt;https://github.com/roger-/pyrtlsdr&gt;
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
