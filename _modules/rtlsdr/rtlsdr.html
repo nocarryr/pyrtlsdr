@@ -17,31 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
- 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-26848999-11');
-</script>
 
 
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
+
+    <!-- <REDIRECT TO READTHEDOCS> -->
+    <meta http-equiv="refresh" content="0; URL=https://pyrtlsdr.readthedocs.io/en/latest/_modules/rtlsdr/rtlsdr.html">
+    <link rel="canonical" href="https://pyrtlsdr.readthedocs.io/en/latest/_modules/rtlsdr/rtlsdr.html">
+    <!-- </REDIRECT TO READTHEDOCS> -->
+
+
+
+     
 
 </head>
 
@@ -49,11 +53,10 @@
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -175,16 +178,16 @@
 <span class="c1">#    along with pyrlsdr.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
 
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">ctypes</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.librtlsdr</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.librtlsdr</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">librtlsdr</span><span class="p">,</span>
     <span class="n">p_rtlsdr_dev</span><span class="p">,</span>
     <span class="n">rtlsdr_read_async_cb_t</span><span class="p">,</span>
     <span class="n">tuner_bandwidth_supported</span><span class="p">,</span>
     <span class="n">tuner_set_bandwidth_supported</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="k">try</span><span class="p">:</span>                <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">izip</span>
+<span class="k">try</span><span class="p">:</span>                <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">izip</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span> <span class="n">izip</span> <span class="o">=</span> <span class="nb">zip</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
@@ -265,7 +268,7 @@
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_index_by_serial</span><span class="p">(</span><span class="n">serial</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when searching device by serial&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
@@ -281,15 +284,15 @@
             <span class="n">bfr</span> <span class="o">=</span> <span class="p">(</span><span class="n">c_ubyte</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)()</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_device_usb_strings</span><span class="p">(</span><span class="n">device_index</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">bfr</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">r</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
-                    <span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when reading USB strings (device </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">device_index</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span>
+                    <span class="n">r</span><span class="p">,</span> <span class="s1">&#39;while reading USB strings (device </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">device_index</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">chr</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bfr</span> <span class="k">if</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
 
         <span class="n">num_devices</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_device_count</span><span class="p">()</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">get_serial</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_devices</span><span class="p">)]</span></div>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serial_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serial_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">device_index</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="p">,</span> <span class="n">serial_number</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseRtlSdr.open"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.BaseRtlSdr.open">[docs]</a>    <span class="k">def</span> <span class="nf">open</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">test_mode_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">serial_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -328,20 +331,17 @@
         <span class="c1"># initialize device</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">device_index</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when opening SDR (device index = </span><span class="si">%d</span><span class="s1">)&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">device_index</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not open SDR (device index = </span><span class="si">%d</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">device_index</span><span class="p">))</span>
 
         <span class="c1"># enable test mode if necessary</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_testmode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">test_mode_enabled</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting test mode&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not set test mode&#39;</span><span class="p">)</span>
 
         <span class="c1"># reset buffers</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_reset_buffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when resetting buffer (device index = </span><span class="si">%d</span><span class="s1">)&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">device_index</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not reset buffer&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">device_opened</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_device_values</span><span class="p">()</span></div>
@@ -368,7 +368,7 @@
         <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device_opened</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">set_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">):</span>
@@ -378,8 +378,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting center freq. to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">freq</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not set center_freq to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">freq</span><span class="p">))</span>
 
         <span class="k">return</span>
 
@@ -388,8 +387,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_center_freq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when getting center freq.&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not get center_freq&#39;</span><span class="p">)</span>
 
         <span class="c1"># FIXME: the E4000 rounds to kHz, this may not be true for other tuners</span>
         <span class="n">reported_center_freq</span> <span class="o">=</span> <span class="n">result</span>
@@ -404,8 +402,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_freq_correction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">err_ppm</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting freq. offset to </span><span class="si">%d</span><span class="s1"> ppm&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">err_ppm</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not set freq. offset to </span><span class="si">%d</span><span class="s1"> ppm&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">err_ppm</span><span class="p">))</span>
 
         <span class="k">return</span>
 
@@ -414,8 +411,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_freq_correction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when getting freq. offset in ppm.&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not get freq. offset&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">set_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rate</span><span class="p">):</span>
@@ -425,8 +421,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting sample rate to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">rate</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not set sample rate to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rate</span><span class="p">))</span>
 
         <span class="k">return</span>
 
@@ -435,8 +430,7 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_sample_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when getting sample rate&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not get sample rate&#39;</span><span class="p">)</span>
 
         <span class="c1"># figure out actual sample rate, taken directly from librtlsdr</span>
         <span class="n">reported_sample_rate</span> <span class="o">=</span> <span class="n">result</span>
@@ -448,6 +442,7 @@
 
     <span class="k">def</span> <span class="nf">set_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bw</span><span class="p">):</span>
 
+        <span class="n">requested_bw</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
         <span class="n">bw</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bw</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tuner_bandwidth_supported</span><span class="p">:</span>
             <span class="n">apply_bw</span> <span class="o">=</span> <span class="n">c_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -465,8 +460,7 @@
 
         <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting tuner bandwidth to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">bw</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not set tuner bandwidth to </span><span class="si">%d</span><span class="s1"> Hz&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">requested_bw</span><span class="p">))</span>
 
         <span class="k">return</span>
 
@@ -492,8 +486,7 @@
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">gain_values</span><span class="p">[</span><span class="n">nearest_gain_ind</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting gain to </span><span class="si">%d</span><span class="s1">&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">gain</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not set gain to </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">gain</span><span class="p">))</span>
 
         <span class="k">return</span>
 
@@ -537,8 +530,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_tuner_gain_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">enabled</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting gain mode&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not get gain mode&#39;</span><span class="p">)</span>
 
         <span class="k">return</span></div>
 
@@ -550,8 +542,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_agc_mode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">enabled</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting AGC mode&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not set AGC mode&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
@@ -578,8 +569,7 @@
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_set_direct_sampling</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">,</span> <span class="n">direct</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when setting AGC mode&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not set direct sampling&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
@@ -595,8 +585,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">librtlsdr</span><span class="o">.</span><span class="n">rtlsdr_get_tuner_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dev_p</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when getting tuner type&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not get tuner type&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
@@ -627,8 +616,7 @@
                                             <span class="n">byref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bytes_read</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when reading </span><span class="si">%d</span><span class="s1"> bytes&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not read </span><span class="si">%d</span><span class="s1"> bytes&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bytes_read</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">num_bytes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -749,8 +737,7 @@
                     <span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_ASYNC_BUF_NUMBER</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when requesting </span><span class="si">%d</span><span class="s1"> bytes&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">num_bytes</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not read </span><span class="si">%d</span><span class="s1"> bytes&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">num_bytes</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">read_async_canceling</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -850,10 +837,40 @@
         <span class="c1"># in this case we don&#39;t raise exceptions</span>
         <span class="k">if</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_async_canceling</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Error code </span><span class="si">%d</span><span class="s1"> when canceling async read&#39;</span>\
-                          <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="n">LibUSBError</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Could not cancel async read&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">read_async_canceling</span> <span class="o">=</span> <span class="kc">True</span></div></div>
+
+
+<div class="viewcode-block" id="LibUSBError"><a class="viewcode-back" href="../../rtlsdr.html#rtlsdr.rtlsdr.LibUSBError">[docs]</a><span class="k">class</span> <span class="nc">LibUSBError</span><span class="p">(</span><span class="ne">IOError</span><span class="p">):</span>
+    <span class="n">_errno_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="o">-</span><span class="mi">1</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_IO&#39;</span><span class="p">,</span> <span class="s1">&#39;Input/output error&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">2</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_INVALID_PARAM&#39;</span><span class="p">,</span> <span class="s1">&#39;Invalid parameter&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">3</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_ACCESS&#39;</span><span class="p">,</span> <span class="s1">&#39;Access denied (insufficient permissions)&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">4</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_NO_DEVICE&#39;</span><span class="p">,</span> <span class="s1">&#39;No such device (it may have been disconnected)&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">5</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_NOT_FOUND&#39;</span><span class="p">,</span> <span class="s1">&#39;Entity not found&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">6</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_BUSY&#39;</span><span class="p">,</span> <span class="s1">&#39;Resource busy&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">7</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_TIMEOUT&#39;</span><span class="p">,</span> <span class="s1">&#39;Operation timed out&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">8</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_OVERFLOW&#39;</span><span class="p">,</span> <span class="s1">&#39;Overflow&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">9</span><span class="p">:</span>  <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_PIPE&#39;</span><span class="p">,</span> <span class="s1">&#39;Pipe error&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">10</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_INTERRUPTED&#39;</span><span class="p">,</span> <span class="s1">&#39;System call interrupted (perhaps due to signal)&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">11</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_NO_MEM&#39;</span><span class="p">,</span> <span class="s1">&#39;Insufficient memory&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">12</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_NOT_SUPPORTED&#39;</span><span class="p">,</span> <span class="s1">&#39;Operation not supported or unimplemented on this platform&#39;</span><span class="p">),</span>
+        <span class="o">-</span><span class="mi">99</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;LIBUSB_ERROR_OTHER&#39;</span><span class="p">,</span> <span class="s1">&#39;Other error&#39;</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errno</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">errno</span> <span class="o">=</span> <span class="n">errno</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_errno_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errno</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">err_id</span><span class="p">,</span> <span class="n">err_msg</span> <span class="o">=</span> <span class="n">t</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;&lt;</span><span class="si">{err_id}</span><span class="s1"> (</span><span class="si">{self.errno}</span><span class="s1">): </span><span class="si">{err_msg}</span><span class="s1">&gt; &quot;</span><span class="si">{self.msg}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">err_id</span><span class="o">=</span><span class="n">err_id</span><span class="p">,</span> <span class="n">err_msg</span><span class="o">=</span><span class="n">err_msg</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;Error code </span><span class="si">{self.errno}</span><span class="s1">: </span><span class="si">{self.msg}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
 </pre></div>
 
            </div>
@@ -883,25 +900,16 @@
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

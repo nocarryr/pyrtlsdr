@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>rtlsdraio module &mdash; pyrtlsdr 0.2.91 documentation</title>
+  <title>rtlsdr.rtlsdraio &mdash; pyrtlsdr 0.2.91 documentation</title>
   
 
   
@@ -17,33 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="rtlsdr.rtlsdrtcp package" href="rtlsdrtcp.html" />
-    <link rel="prev" title="rtlsdr module" href="rtlsdr.html" />
- 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-26848999-11');
-</script>
+    <link rel="next" title="rtlsdr.rtlsdrtcp" href="rtlsdrtcp.html" />
+    <link rel="prev" title="rtlsdr.rtlsdr" href="rtlsdr.html" />
 
 
-  
-  <script src="_static/js/modernizr.min.js"></script>
+
+    <!-- <REDIRECT TO READTHEDOCS> -->
+    <meta http-equiv="refresh" content="0; URL=https://pyrtlsdr.readthedocs.io/en/latest/rtlsdraio.html">
+    <link rel="canonical" href="https://pyrtlsdr.readthedocs.io/en/latest/rtlsdraio.html">
+    <!-- </REDIRECT TO READTHEDOCS> -->
+
+
+
+     
 
 </head>
 
@@ -51,11 +55,10 @@
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -97,10 +100,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="Reference.html">Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="rtlsdr.html">rtlsdr module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">rtlsdraio module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rtlsdrtcp.html">rtlsdr.rtlsdrtcp package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="helpers.html">helpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtlsdr.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.rtlsdr</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.rtlsdraio</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtlsdrtcp.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.rtlsdrtcp</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.helpers</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -150,7 +153,7 @@
         
           <li><a href="Reference.html">Reference</a> &raquo;</li>
         
-      <li>rtlsdraio module</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.rtlsdraio</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -170,23 +173,23 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-rtlsdr.rtlsdraio">
-<span id="rtlsdraio-module"></span><h1>rtlsdraio module<a class="headerlink" href="#module-rtlsdr.rtlsdraio" title="Permalink to this headline">¶</a></h1>
-<p>This module adds <a class="reference external" href="https://docs.python.org/3.5/library/asyncio.html#module-asyncio" title="(in Python v3.5)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asyncio</span></code></a> support for reading samples from the device.</p>
+<span id="rtlsdr-rtlsdraio"></span><h1><a class="reference internal" href="#module-rtlsdr.rtlsdraio" title="rtlsdr.rtlsdraio"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.rtlsdraio</span></code></a><a class="headerlink" href="#module-rtlsdr.rtlsdraio" title="Permalink to this headline">¶</a></h1>
+<p>This module adds <a class="reference external" href="https://docs.python.org/3/library/asyncio.html#module-asyncio" title="(in Python v3.8)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asyncio</span></code></a> support for reading samples from the device.</p>
 <p>The main functionality can be found in the <a class="reference internal" href="#rtlsdr.rtlsdraio.RtlSdrAio.stream" title="rtlsdr.rtlsdraio.RtlSdrAio.stream"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stream()</span></code></a>
 method of <a class="reference internal" href="#rtlsdr.rtlsdraio.RtlSdrAio" title="rtlsdr.rtlsdraio.RtlSdrAio"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdraio.RtlSdrAio</span></code></a>.</p>
 <p class="rubric">Example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">from</span> <span class="nn">rtlsdr</span> <span class="kn">import</span> <span class="n">RtlSdr</span>
 
-<span class="n">async</span> <span class="k">def</span> <span class="nf">streaming</span><span class="p">():</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">streaming</span><span class="p">():</span>
     <span class="n">sdr</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="p">()</span>
 
-    <span class="n">async</span> <span class="k">for</span> <span class="n">samples</span> <span class="ow">in</span> <span class="n">sdr</span><span class="o">.</span><span class="n">stream</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">samples</span> <span class="ow">in</span> <span class="n">sdr</span><span class="o">.</span><span class="n">stream</span><span class="p">():</span>
         <span class="c1"># do something with samples</span>
         <span class="c1"># ...</span>
 
     <span class="c1"># to stop streaming:</span>
-    <span class="n">await</span> <span class="n">sdr</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    <span class="k">await</span> <span class="n">sdr</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
     <span class="c1"># done</span>
     <span class="n">sdr</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -197,11 +200,11 @@ method of <a class="reference internal" href="#rtlsdr.rtlsdraio.RtlSdrAio" title
 </div>
 <dl class="class">
 <dt id="rtlsdr.rtlsdraio.RtlSdrAio">
-<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdraio.</code><code class="descname">RtlSdrAio</code><span class="sig-paren">(</span><em>device_index=0</em>, <em>test_mode_enabled=False</em>, <em>serial_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdraio.html#RtlSdrAio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdraio.RtlSdrAio" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">rtlsdr.rtlsdraio.</code><code class="sig-name descname">RtlSdrAio</code><span class="sig-paren">(</span><em class="sig-param">device_index=0</em>, <em class="sig-param">test_mode_enabled=False</em>, <em class="sig-param">serial_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdraio.html#RtlSdrAio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdraio.RtlSdrAio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="rtlsdr.html#rtlsdr.rtlsdr.RtlSdr" title="rtlsdr.rtlsdr.RtlSdr"><code class="xref py py-class docutils literal notranslate"><span class="pre">rtlsdr.rtlsdr.RtlSdr</span></code></a></p>
 <dl class="method">
 <dt id="rtlsdr.rtlsdraio.RtlSdrAio.stop">
-<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdraio.html#RtlSdrAio.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdraio.RtlSdrAio.stop" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdraio.html#RtlSdrAio.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdraio.RtlSdrAio.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop async stream</p>
 <p>Stops the <code class="docutils literal notranslate"><span class="pre">read_samples_async</span></code> and <code class="docutils literal notranslate"><span class="pre">Excecutor</span></code> task created by
 <a class="reference internal" href="#rtlsdr.rtlsdraio.RtlSdrAio.stream" title="rtlsdr.rtlsdraio.RtlSdrAio.stream"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stream()</span></code></a>.</p>
@@ -209,93 +212,82 @@ method of <a class="reference internal" href="#rtlsdr.rtlsdraio.RtlSdrAio" title
 
 <dl class="method">
 <dt id="rtlsdr.rtlsdraio.RtlSdrAio.stream">
-<code class="descname">stream</code><span class="sig-paren">(</span><em>num_samples_or_bytes=131072</em>, <em>format='samples'</em>, <em>loop=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdraio.html#RtlSdrAio.stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdraio.RtlSdrAio.stream" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stream</code><span class="sig-paren">(</span><em class="sig-param">num_samples_or_bytes=131072</em>, <em class="sig-param">format='samples'</em>, <em class="sig-param">loop=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/rtlsdraio.html#RtlSdrAio.stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.rtlsdraio.RtlSdrAio.stream" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start async streaming from SDR and return an async iterator (Python 3.5+).</p>
 <p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">read_samples_async()</span></code> method is called in an  <code class="xref py py-class docutils literal notranslate"><span class="pre">Excecutor</span></code>
-instance using <a class="reference external" href="https://docs.python.org/3.5/library/asyncio-eventloop.html#asyncio.AbstractEventLoop.run_in_executor" title="(in Python v3.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.AbstractEventLoop.run_in_executor()</span></code></a>.</p>
+instance using <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.AbstractEventLoop.run_in_executor()</span></code>.</p>
 <p>The returned asynchronous iterable can then used to retrieve sample
 data using <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">for</span></code> syntax.</p>
 <p>Calling the <a class="reference internal" href="#rtlsdr.rtlsdraio.RtlSdrAio.stop" title="rtlsdr.rtlsdraio.RtlSdrAio.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a> method will stop
 the <code class="docutils literal notranslate"><span class="pre">read_samples_async</span></code> session and close the <code class="docutils literal notranslate"><span class="pre">Excecutor</span></code> task.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>num_samples_or_bytes</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – The number of bytes/samples that will be
-returned each iteration</li>
-<li><strong>format</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/stdtypes.html#str" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – Specifies whether raw data (“bytes”)
-or IQ samples (“samples”) will be returned</li>
-<li><strong>loop</strong> (<em>optional</em>) – An asyncio event loop</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_samples_or_bytes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – The number of bytes/samples that will be
+returned each iteration</p></li>
+<li><p><strong>format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>, optional) – Specifies whether raw data (“bytes”)
+or IQ samples (“samples”) will be returned</p></li>
+<li><p><strong>loop</strong> (<em>optional</em>) – An asyncio event loop</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An <code class="docutils literal notranslate"><span class="pre">asynchronous</span> <span class="pre">iterator</span></code> to yield sample data</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">asynchronous</span> <span class="pre">iterator</span></code> to yield sample data</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="rtlsdr.rtlsdraio.AsyncCallbackIter">
-<em class="property">class </em><code class="descclassname">rtlsdr.rtlsdraio.</code><code class="descname">AsyncCallbackIter</code><span class="sig-paren">(</span><em>func_start</em>, <em>func_stop=None</em>, <em>queue_size=20</em>, <em>*</em>, <em>loop=None</em><span class="sig-paren">)</span><a class="headerlink" href="#rtlsdr.rtlsdraio.AsyncCallbackIter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.5/library/functions.html#object" title="(in Python v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">rtlsdr.rtlsdraio.</code><code class="sig-name descname">AsyncCallbackIter</code><span class="sig-paren">(</span><em class="sig-param">func_start</em>, <em class="sig-param">func_stop=None</em>, <em class="sig-param">queue_size=20</em>, <em class="sig-param">*</em>, <em class="sig-param">loop=None</em><span class="sig-paren">)</span><a class="headerlink" href="#rtlsdr.rtlsdraio.AsyncCallbackIter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Convert a callback-based legacy async function into one supporting asyncio
 and Python 3.5+</p>
 <p>The queued data can be iterated using <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">for</span></code></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>func_start</strong> – A callable which should take a single callback that will be
-passed data. Will be run in a seperate thread in case it blocks.</li>
-<li><strong>func_stop</strong> (<em>optional</em>) – A callable to stop <code class="docutils literal notranslate"><span class="pre">func_start</span></code> from calling the
-callback. Will be run in a seperate thread in case it blocks.</li>
-<li><strong>queue_size</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – The maximum amount of data
-that will be buffered.</li>
-<li><strong>loop</strong> (<em>optional</em>) – The <code class="docutils literal notranslate"><span class="pre">asyncio.event_loop</span></code> to use. If not supplied,
-<a class="reference external" href="https://docs.python.org/3.5/library/asyncio-eventloops.html#asyncio.get_event_loop" title="(in Python v3.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.get_event_loop()</span></code></a> will be used.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func_start</strong> – A callable which should take a single callback that will be
+passed data. Will be run in a seperate thread in case it blocks.</p></li>
+<li><p><strong>func_stop</strong> (<em>optional</em>) – A callable to stop <code class="docutils literal notranslate"><span class="pre">func_start</span></code> from calling the
+callback. Will be run in a seperate thread in case it blocks.</p></li>
+<li><p><strong>queue_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">int</span></code></a>, optional) – The maximum amount of data
+that will be buffered.</p></li>
+<li><p><strong>loop</strong> (<em>optional</em>) – The <code class="docutils literal notranslate"><span class="pre">asyncio.event_loop</span></code> to use. If not supplied,
+<a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.get_event_loop" title="(in Python v3.8)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.get_event_loop()</span></code></a> will be used.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="rtlsdr.rtlsdraio.AsyncCallbackIter.add_to_queue">
-<em class="property">coroutine </em><code class="descname">add_to_queue</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rtlsdr.rtlsdraio.AsyncCallbackIter.add_to_queue" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">add_to_queue</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#rtlsdr.rtlsdraio.AsyncCallbackIter.add_to_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add items to the queue</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> – Arguments to be added</td>
-</tr>
-</tbody>
-</table>
-<p>This method is a <a class="reference external" href="https://docs.python.org/3.5/library/asyncio-task.html#asyncio.coroutine" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coroutine</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*args</strong> – Arguments to be added</p>
+</dd>
+</dl>
+<p>This method is a <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.coroutine" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coroutine</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rtlsdr.rtlsdraio.AsyncCallbackIter.start">
-<em class="property">coroutine </em><code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rtlsdr.rtlsdraio.AsyncCallbackIter.start" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rtlsdr.rtlsdraio.AsyncCallbackIter.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the execution</p>
 <p>The callback given by <code class="docutils literal notranslate"><span class="pre">func_start</span></code> will be called by
-<a class="reference external" href="https://docs.python.org/3.5/library/asyncio-eventloop.html#asyncio.AbstractEventLoop.run_in_executor" title="(in Python v3.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.AbstractEventLoop.run_in_executor()</span></code></a> and will continue
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.AbstractEventLoop.run_in_executor()</span></code> and will continue
 until <a class="reference internal" href="#rtlsdr.rtlsdraio.AsyncCallbackIter.stop" title="rtlsdr.rtlsdraio.AsyncCallbackIter.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a> is called.</p>
-<p>This method is a <a class="reference external" href="https://docs.python.org/3.5/library/asyncio-task.html#asyncio.coroutine" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coroutine</span></code></a></p>
+<p>This method is a <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.coroutine" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coroutine</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="rtlsdr.rtlsdraio.AsyncCallbackIter.stop">
-<em class="property">coroutine </em><code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rtlsdr.rtlsdraio.AsyncCallbackIter.stop" title="Permalink to this definition">¶</a></dt>
+<em class="property">async </em><code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rtlsdr.rtlsdraio.AsyncCallbackIter.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop the running executor task</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">func_stop</span></code> was supplied, it will be called after the queue has
 been exhausted.</p>
-<p>This method is a <a class="reference external" href="https://docs.python.org/3.5/library/asyncio-task.html#asyncio.coroutine" title="(in Python v3.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coroutine</span></code></a></p>
+<p>This method is a <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.coroutine" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coroutine</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -310,10 +302,10 @@ been exhausted.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="rtlsdrtcp.html" class="btn btn-neutral float-right" title="rtlsdr.rtlsdrtcp package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="rtlsdrtcp.html" class="btn btn-neutral float-right" title="rtlsdr.rtlsdrtcp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="rtlsdr.html" class="btn btn-neutral" title="rtlsdr module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="rtlsdr.html" class="btn btn-neutral float-left" title="rtlsdr.rtlsdr" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -339,25 +331,16 @@ been exhausted.</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

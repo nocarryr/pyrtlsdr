@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>helpers module &mdash; pyrtlsdr 0.2.91 documentation</title>
+  <title>rtlsdr.helpers &mdash; pyrtlsdr 0.2.91 documentation</title>
   
 
   
@@ -17,32 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="rtlsdr.rtlsdrtcp package" href="rtlsdrtcp.html" />
- 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-26848999-11"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-26848999-11');
-</script>
+    <link rel="prev" title="rtlsdr.rtlsdrtcp" href="rtlsdrtcp.html" />
 
 
-  
-  <script src="_static/js/modernizr.min.js"></script>
+
+    <!-- <REDIRECT TO READTHEDOCS> -->
+    <meta http-equiv="refresh" content="0; URL=https://pyrtlsdr.readthedocs.io/en/latest/helpers.html">
+    <link rel="canonical" href="https://pyrtlsdr.readthedocs.io/en/latest/helpers.html">
+    <!-- </REDIRECT TO READTHEDOCS> -->
+
+
+
+     
 
 </head>
 
@@ -50,11 +54,10 @@
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -96,10 +99,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="Reference.html">Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="rtlsdr.html">rtlsdr module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rtlsdraio.html">rtlsdraio module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rtlsdrtcp.html">rtlsdr.rtlsdrtcp package</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">helpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtlsdr.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.rtlsdr</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtlsdraio.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.rtlsdraio</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtlsdrtcp.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.rtlsdrtcp</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.helpers</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -149,7 +152,7 @@
         
           <li><a href="Reference.html">Reference</a> &raquo;</li>
         
-      <li>helpers module</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.helpers</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -169,23 +172,19 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-rtlsdr.helpers">
-<span id="helpers-module"></span><h1>helpers module<a class="headerlink" href="#module-rtlsdr.helpers" title="Permalink to this headline">¶</a></h1>
+<span id="rtlsdr-helpers"></span><h1><a class="reference internal" href="#module-rtlsdr.helpers" title="rtlsdr.helpers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">rtlsdr.helpers</span></code></a><a class="headerlink" href="#module-rtlsdr.helpers" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="rtlsdr.helpers.limit_calls">
-<code class="descclassname">rtlsdr.helpers.</code><code class="descname">limit_calls</code><span class="sig-paren">(</span><em>max_calls</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/helpers.html#limit_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.helpers.limit_calls" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">rtlsdr.helpers.</code><code class="sig-name descname">limit_calls</code><span class="sig-paren">(</span><em class="sig-param">max_calls</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/helpers.html#limit_calls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.helpers.limit_calls" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator to cancel async reads after the given number of calls.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_calls</strong> (<a class="reference external" href="https://docs.python.org/3.5/library/functions.html#int" title="(in Python v3.5)"><em>int</em></a>) – Number of calls to wait for before cancelling</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_calls</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of calls to wait for before cancelling</p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<dl class="docutils">
-<dt>Stop reading after 10 calls:</dt>
-<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@limit_calls</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<dl>
+<dt>Stop reading after 10 calls:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@limit_calls</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">read_callback</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;signal mean:&#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sdr</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="p">()</span>
@@ -200,20 +199,16 @@
 
 <dl class="function">
 <dt id="rtlsdr.helpers.limit_time">
-<code class="descclassname">rtlsdr.helpers.</code><code class="descname">limit_time</code><span class="sig-paren">(</span><em>max_seconds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/helpers.html#limit_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.helpers.limit_time" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">rtlsdr.helpers.</code><code class="sig-name descname">limit_time</code><span class="sig-paren">(</span><em class="sig-param">max_seconds</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/rtlsdr/helpers.html#limit_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#rtlsdr.helpers.limit_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator to cancel async reads after a specified time period.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>max_seconds</strong> – Number of seconds to wait before cancelling</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>max_seconds</strong> – Number of seconds to wait before cancelling</p>
+</dd>
+</dl>
 <p class="rubric">Examples</p>
-<dl class="docutils">
-<dt>Stop reading after 10 seconds:</dt>
-<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@limit_time</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<dl>
+<dt>Stop reading after 10 seconds:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@limit_time</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">read_callback</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;signal mean:&#39;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sdr</span> <span class="o">=</span> <span class="n">RtlSdr</span><span class="p">()</span>
@@ -239,7 +234,7 @@ use the default value (the <code class="xref py py-class docutils literal notran
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="rtlsdrtcp.html" class="btn btn-neutral" title="rtlsdr.rtlsdrtcp package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="rtlsdrtcp.html" class="btn btn-neutral float-left" title="rtlsdr.rtlsdrtcp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -265,25 +260,16 @@ use the default value (the <code class="xref py py-class docutils literal notran
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
